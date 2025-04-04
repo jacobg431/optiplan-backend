@@ -1,0 +1,80 @@
+# .NET Core & .NET Framework
+**/bin/
+**/obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# Database
+*.db
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# Backup & Build Files
+*.bak
+*.dll
+*.exe
+*.pdb
+*.cache
+*.zip
+*.rar
+*.tar.gz
+*.7z
+
+# Package Folders
+**/packages/
+*.nupkg
+*.snupkg
+
+# Test Results
+TestResults/
+
+# Temporary files
+~$*
+
+# Publish artifacts
+**/publish/
+**/out/
+
+# Azure Functions
+.local.settings.json
+
+# Mac specific files
+.DS_Store
+
+# Windows image file caches
+Thumbs.db
+ehshell.dll
+
+# Mono auto generated files
+test-result.xml
+mono_crash.*
+
+# Node.js (if using frontend frameworks)
+node_modules/
+
+# JetBrains Rider
+.idea/
+
+# ReSharper
+_ReSharper*/
+
+# Coverage and Analysis Results
+*.coverage
+*.coveragexml
+*.coveragejson
