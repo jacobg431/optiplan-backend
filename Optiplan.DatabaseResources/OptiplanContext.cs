@@ -55,26 +55,10 @@ public partial class OptiplanContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Category>(entity =>
-        {
-            entity.Property(e => e.Id).ValueGeneratedNever();
-        });
-
-        modelBuilder.Entity<Currency>(entity =>
-        {
-            entity.Property(e => e.Id).ValueGeneratedNever();
-        });
 
         modelBuilder.Entity<Dependency>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
-
             entity.HasOne(d => d.Category).WithMany(p => p.Dependencies).OnDelete(DeleteBehavior.ClientSetNull);
-        });
-
-        modelBuilder.Entity<Project>(entity =>
-        {
-            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<ProjectToDependency>(entity =>
