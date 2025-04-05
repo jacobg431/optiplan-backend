@@ -28,16 +28,17 @@ public partial class OptiplanContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string database = "Optiplan.db";
+        string relativePath = "..";
         string currentDir = Environment.CurrentDirectory;
         string path = string.Empty;
 
         if (currentDir.EndsWith("net8.0"))
         {
-            path = Path.Combine("..", "..", "..", "..", database);
+            path = Path.Combine(relativePath, relativePath, relativePath, relativePath, database);
         }
         else
         {
-            path = Path.Combine("..", database);
+            path = Path.Combine(relativePath, database);
         }
 
         path = Path.GetFullPath(path);
@@ -47,7 +48,7 @@ public partial class OptiplanContext : DbContext
             // Important to throw, otherwise database provider will create empty db file
             throw new FileNotFoundException(message: $"{path} not found.", fileName: path);
         }
-        optionsBuilder.UseSqlite("Data Source=../Optiplan.db");
+        optionsBuilder.UseSqlite($"Data Source={path}");
         optionsBuilder.LogTo(OptiplanContextLogger.WriteLine, 
             [Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.CommandExecuting]
         );
