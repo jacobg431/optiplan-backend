@@ -1,4 +1,4 @@
-@Optiplan.WebApi_HostAddress = http://localhost:5078
+@Optiplan.WebApi_HostAddress = http://localhost:5067
 
 GET {{Optiplan.WebApi_HostAddress}}/weatherforecast/
 Accept: application/json
