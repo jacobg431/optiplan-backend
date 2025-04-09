@@ -24,7 +24,7 @@ echo
 echo "-----------------------------"
 echo "🧪 Running the application..."
 echo "-----------------------------"
-dotnet run -p Optiplan.WebApi --launch-profile https
+dotnet run --project Optiplan.WebApi --launch-profile https
 
 echo
 echo "🎉 All steps completed successfully!"
