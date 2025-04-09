@@ -51,13 +51,14 @@ sql_script="OptiplanSqlite3.sql"
 if [ -f "$db_file" ]; then
   rm -f "$db_file"
 fi
-sqlite3 "$db_file" -init "$sql_script"
+sqlite3 "$db_file" < "$sql_script"
 echo "✅ Database initialized as $db_file"
 
 echo
 echo "-----------------------------"
 echo "🔒 Generating development HTTPS certificate..."
 echo "-----------------------------"
+dotnet dev-certs https --clean
 dotnet dev-certs https --trust
 
 echo
