@@ -56,6 +56,12 @@ echo "✅ Database initialized as $db_file"
 
 echo
 echo "-----------------------------"
+echo "🔒 Generating development HTTPS certificate..."
+echo "-----------------------------"
+dotnet dev-certs https --trust
+
+echo
+echo "-----------------------------"
 echo "🧪 Running unit tests..."
 echo "-----------------------------"
 dotnet test Optiplan.UnitTests --no-build
