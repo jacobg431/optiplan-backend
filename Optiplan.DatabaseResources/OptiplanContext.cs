@@ -17,8 +17,6 @@ public partial class OptiplanContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
-    public virtual DbSet<Currency> Currencies { get; set; }
-
     public virtual DbSet<Dependency> Dependencies { get; set; }
 
     public virtual DbSet<WorkOrder> WorkOrders { get; set; }
