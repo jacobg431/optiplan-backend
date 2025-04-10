@@ -14,6 +14,8 @@ public partial class Category
     public int Id { get; set; }
 
     [Column(TypeName = "VARCHAR(100)")]
+    [Required]
+    [StringLength(100)]
     public string Name { get; set; } = null!;
 
     [InverseProperty("Category")]

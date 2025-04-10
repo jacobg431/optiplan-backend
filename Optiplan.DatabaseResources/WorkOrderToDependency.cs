@@ -18,25 +18,32 @@ public partial class WorkOrderToDependency
 
     [Key]
     [Column(TypeName = "INT")]
+    [Required]
     public int DependencyId { get; set; }
 
     [Key]
     [Column(TypeName = "INT")]
+    [Required]
     public int WorkOrderId { get; set; }
 
     [Column(TypeName = "VARCHAR(500)")]
+    [StringLength(500)]
     public string? InputField1Value { get; set; }
 
     [Column(TypeName = "VARCHAR(500)")]
+    [StringLength(100)]
     public string? InputField2Value { get; set; }
 
     [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
     public string? DropdownOptionSelected { get; set; }
 
     [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
     public string? RadioOptionSelected { get; set; }
 
     [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
     public string? CheckboxOptionSelected { get; set; }
 
     [Column(TypeName = "INT")]
