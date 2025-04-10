@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Optiplan.DatabaseResources;
 
-[PrimaryKey("DependencyInstanceId", "DependencyId", "ProjectId")]
-[Table("ProjectToDependency")]
-[Index("DependencyId", Name = "fk_ProjectToDependency_Dependency_idx")]
-[Index("ProjectId", Name = "fk_ProjectToDependency_Project1_idx")]
-public partial class ProjectToDependency
+[PrimaryKey("DependencyInstanceId", "DependencyId", "WorkOrderId")]
+[Table("WorkOrderToDependency")]
+[Index("DependencyId", Name = "fk_WorkOrderToDependency_Dependency_idx")]
+[Index("WorkOrderId", Name = "fk_WorkOrderToDependency_WorkOrder1_idx")]
+public partial class WorkOrderToDependency
 {
     [Key]
     [Column(TypeName = "INT")]
@@ -22,7 +22,7 @@ public partial class ProjectToDependency
 
     [Key]
     [Column(TypeName = "INT")]
-    public int ProjectId { get; set; }
+    public int WorkOrderId { get; set; }
 
     [Column(TypeName = "VARCHAR(500)")]
     public string? InputField1Value { get; set; }
@@ -52,10 +52,10 @@ public partial class ProjectToDependency
     public DateTime? End { get; set; }
 
     [ForeignKey("DependencyId")]
-    [InverseProperty("ProjectToDependencies")]
+    [InverseProperty("WorkOrderToDependencies")]
     public virtual Dependency Dependency { get; set; } = null!;
 
-    [ForeignKey("ProjectId")]
-    [InverseProperty("ProjectToDependencies")]
-    public virtual Project Project { get; set; } = null!;
+    [ForeignKey("WorkOrderId")]
+    [InverseProperty("WorkOrderToDependencies")]
+    public virtual WorkOrder WorkOrder { get; set; } = null!;
 }

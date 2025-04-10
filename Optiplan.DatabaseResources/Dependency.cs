@@ -85,5 +85,5 @@ public partial class Dependency
     public virtual Category Category { get; set; } = null!;
 
     [InverseProperty("Dependency")]
-    public virtual ICollection<ProjectToDependency> ProjectToDependencies { get; set; } = new List<ProjectToDependency>();
+    public virtual ICollection<WorkOrderToDependency> WorkOrderToDependencies { get; set; } = new List<WorkOrderToDependency>();
 }

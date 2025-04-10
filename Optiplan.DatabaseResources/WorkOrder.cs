@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Optiplan.DatabaseResources;
 
-[Table("Project")]
-public partial class Project
+[Table("WorkOrder")]
+public partial class WorkOrder
 {
     [Key]
     [Column(TypeName = "INT")]
@@ -22,6 +22,6 @@ public partial class Project
     [Column(TypeName = "DATETIME")]
     public DateTime? End { get; set; }
 
-    [InverseProperty("Project")]
-    public virtual ICollection<ProjectToDependency> ProjectToDependencies { get; set; } = new List<ProjectToDependency>();
+    [InverseProperty("WorkOrder")]
+    public virtual ICollection<WorkOrderToDependency> WorkOrderToDependencies { get; set; } = new List<WorkOrderToDependency>();
 }
