@@ -1,0 +1,67 @@
+# This workflow will automatically move issue to review if all checks passes in the .NET CI workflow.
+
+name: Move Issue to Review on PR Check Success
+
+on:
+  workflow_run:
+    workflows: [".NET CI"]
+    types:
+      - completed
+
+jobs:
+  move-to-review:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move linked issue to Review
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.workflow_run.pull_requests[0].number;
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            const body = pr.data.body;
+            const issueMatch = body.match(/#(\d+)/);
+            if (!issueMatch) {
+              core.info('No linked issue found in PR body.');
+              return;
+            }
+
+            const issueNumber = parseInt(issueMatch[1]);
+
+            const projectId = 'PVT_kwHOCWiXSM4A1OJF';
+            const inProgressId = '47fc9ee4'; // "In progress" status field
+            const inReviewOptionId = 'df73e18b'; // “In review” status field
+
+            const issueNodeId = (await github.graphql(`
+              query {
+                repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                  issue(number: ${issueNumber}) {
+                    id
+                  }
+                }
+              }
+            `)).repository.issue.id;
+
+            await github.graphql(`
+              mutation {
+                updateProjectV2ItemFieldValue(
+                  input: {
+                    projectId: "${projectId}"
+                    itemId: "${issueNodeId}"
+                    fieldId: "${inProgressId}"
+                    value: {
+                      singleSelectOptionId: "${inReviewOptionId}"
+                    }
+                  }
+                ) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            `);
