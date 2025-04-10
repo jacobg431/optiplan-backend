@@ -17,13 +17,11 @@ public partial class OptiplanContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
-    public virtual DbSet<Currency> Currencies { get; set; }
-
     public virtual DbSet<Dependency> Dependencies { get; set; }
 
-    public virtual DbSet<Project> Projects { get; set; }
+    public virtual DbSet<WorkOrder> WorkOrders { get; set; }
 
-    public virtual DbSet<ProjectToDependency> ProjectToDependencies { get; set; }
+    public virtual DbSet<WorkOrderToDependency> WorkOrderToDependencies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -62,11 +60,11 @@ public partial class OptiplanContext : DbContext
             entity.HasOne(d => d.Category).WithMany(p => p.Dependencies).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        modelBuilder.Entity<ProjectToDependency>(entity =>
+        modelBuilder.Entity<WorkOrderToDependency>(entity =>
         {
-            entity.HasOne(d => d.Dependency).WithMany(p => p.ProjectToDependencies).OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.Dependency).WithMany(p => p.WorkOrderToDependencies).OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.Project).WithMany(p => p.ProjectToDependencies).OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.WorkOrder).WithMany(p => p.WorkOrderToDependencies).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);
