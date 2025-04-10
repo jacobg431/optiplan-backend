@@ -50,11 +50,11 @@ CREATE INDEX `fk_Dependency_Category1_idx` ON `Dependency` (`CategoryID` ASC);
 
 
 -- -----------------------------------------------------
--- Table `Project`
+-- Table `WorkOrder`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Project` ;
+DROP TABLE IF EXISTS `WorkOrder` ;
 
-CREATE TABLE IF NOT EXISTS `Project` (
+CREATE TABLE IF NOT EXISTS `WorkOrder` (
   `Id` INT PRIMARY KEY,
   `Name` VARCHAR(100) NOT NULL,
   `Start` DATETIME NULL,
@@ -63,14 +63,14 @@ CREATE TABLE IF NOT EXISTS `Project` (
 
 
 -- -----------------------------------------------------
--- Table `ProjectToDependency`
+-- Table `WorkOrderToDependency`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ProjectToDependency` ;
+DROP TABLE IF EXISTS `WorkOrderToDependency` ;
 
-CREATE TABLE IF NOT EXISTS `ProjectToDependency` (
+CREATE TABLE IF NOT EXISTS `WorkOrderToDependency` (
   `DependencyInstanceId` INT NOT NULL,
   `DependencyId` INT NOT NULL,
-  `ProjectId` INT NOT NULL,
+  `WorkOrderId` INT NOT NULL,
   `InputField1Value` VARCHAR(500) NULL,
   `InputField2Value` VARCHAR(500) NULL,
   `DropdownOptionSelected` VARCHAR(100) NULL,
@@ -80,20 +80,20 @@ CREATE TABLE IF NOT EXISTS `ProjectToDependency` (
   `SliderMaxValue` INT NULL,
   `Start` DATETIME NULL,
   `End` DATETIME NULL,
-  PRIMARY KEY (`DependencyInstanceId`, `DependencyId`, `ProjectId`),
-  CONSTRAINT `fk_ProjectToDependency_Dependency`
+  PRIMARY KEY (`DependencyInstanceId`, `DependencyId`, `WorkOrderId`),
+  CONSTRAINT `fk_WorkOrderToDependency_Dependency`
     FOREIGN KEY (`DependencyId`)
     REFERENCES `Dependency` (`Id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ProjectToDependency_Project1`
-    FOREIGN KEY (`ProjectId`)
-    REFERENCES `Project` (`Id`)
+  CONSTRAINT `fk_WorkOrderToDependency_WorkOrder1`
+    FOREIGN KEY (`WorkOrderId`)
+    REFERENCES `WorkOrder` (`Id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
-CREATE INDEX `fk_ProjectToDependency_Dependency_idx` ON `ProjectToDependency` (`DependencyId` ASC);
-CREATE INDEX `fk_ProjectToDependency_Project1_idx` ON `ProjectToDependency` (`ProjectId` ASC);
+CREATE INDEX `fk_WorkOrderToDependency_Dependency_idx` ON `WorkOrderToDependency` (`DependencyId` ASC);
+CREATE INDEX `fk_WorkOrderToDependency_WorkOrder1_idx` ON `WorkOrderToDependency` (`WorkOrderId` ASC);
 
 
 -- -----------------------------------------------------
