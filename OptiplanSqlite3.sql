@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `Dependency` (
   `CategoryId` INT NOT NULL,
   `MultipleInstances` TINYINT NOT NULL DEFAULT 0,
   `InputField1` TINYINT NOT NULL DEFAULT 0,
-  `InputFieldLabel` VARCHAR(500) NULL,
+  `InputField1Label` VARCHAR(500) NULL,
   `InputField2` TINYINT NOT NULL DEFAULT 0,
   `InputField2Label` VARCHAR(500) NULL,
   `DropdownMenu` TINYINT NOT NULL DEFAULT 0,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `Dependency` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
-CREATE INDEX `fk_Dependency_Category1_idx` ON `Dependency` (`CategoryID` ASC);
+CREATE INDEX `fk_Dependency_Category1_idx` ON `Dependency` (`CategoryId` ASC);
 
 
 -- -----------------------------------------------------
@@ -106,3 +106,86 @@ CREATE TABLE IF NOT EXISTS `Currency` (
   `Country` VARCHAR(100) NOT NULL,
   `Code` CHAR(3) NOT NULL
 );
+
+-- -----------------------------------------------------
+-- INSERT INTO Table `Category`
+-- -----------------------------------------------------
+INSERT INTO Category (Id, Name) VALUES
+(1, 'Physical Environment'),
+(2, 'Safety and Risk Management'),
+(3, 'Planning'),
+(4, 'Economy'),
+(5, 'Human Resources'),
+(6, 'Access and Logistics'),
+(7, 'Materials and Equipment')
+
+-- -----------------------------------------------------
+-- INSERT INTO Table `Dependency`
+-- -----------------------------------------------------
+INSERT INTO Category (
+    Id, Name, Tooltip, CategoryId, MultipleInstances, InputField1, InputField1Label, InputField2, 
+    InputField2Label, DropdownMenu, DropdownOptions, RadioButtons, RadioOptions, CheckboxButtons, 
+    CheckboxOptions, Slider, SliderMin, SliderMax, SliderRange, DateTimePicker, DateTimeRange, 
+    RecommendedDependencyId, RecommendedDependencyId
+) VALUES
+(
+    1, 'Other Projects', 
+    'Specify other projects this project depends on, and whether those projects must have started or finished before this project can start.',
+    3, 1, 1, 'Project', 0, NULL, 1, 'Has strated;Has finished', 0, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, NULL, NULL
+),
+(
+    2, 'Project Start (Earliest)', 'The earliest date and time the project can begin.',
+    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 0, NULL, NULL
+),
+(
+    3, 'Project Start (Latest)', 'The latest date and time the project can begin.',
+    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 0, NULL, NULL
+),
+(
+    4, 'Project Deadline', 'The latest date and time the project must be concluded.',
+    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 0, NULL, NULL
+),
+(
+    5, 'Specialists', 'Specify the specialists to assign to this project, and whether they are internally employed or externally hired.',
+    5, 1, 1, 'Full name', 1, 'Specialist role', 0, NULL, 1, 'Internal;External', 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+),
+(
+    6, 'Materials and Parts', 'Materials and (spare) parts that will be consumed during the project.',
+    7, 1, 1, 'Material or part', 1, 'Amount', 1, 'Items;Kilograms;Liters', 0, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, NULL, NULL
+),
+(
+    7, 'Locations', 'The locations where the project will be carried out.',
+    6, 1, 1, 'Location', 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+),
+(
+    8, 'Locations to Close off', 'The locations where the project will be carried out.',
+    6, 1, 1, 'Location', 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+),
+(
+    9, 'Criticality', 'Criticality level on a scale of 1-5, where 1 is low and 5 is uttermost.',
+    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 1, 1, 5, 0, 0, 0, NULL, NULL
+),
+(
+    10, 'Security Risks', 'The locations where the project will be carried out.',
+    2, 1, 1, 'Location', 1, 'Description', 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+),
+(
+    11, 'Calculatory Costs', 'Estimated costs per day if project is not carried out.',
+    4, 0, 1, 'Estimated calculatory costs', 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, NULL, NULL
+)
+
+-- -----------------------------------------------------
+-- INSERT INTO Table `WorkOrder`
+-- -----------------------------------------------------
+
+INSERT INTO WorkOrder (Id, Name, Start, End) VALUES
+(1, 'Lubrication of rolling mill bearings', '2026-01-05 08:00:00', '2026-01-05 16:00:00'),
+(2, 'Replacement of blast furnace cooling pipes', '2026-01-06 07:00:00', '2026-01-10 18:00:00'),
+(3, 'Inspection of overhead crane rails', '2026-01-05 18:00:00', '2026-01-06 02:00:00'),
+(4, 'Calibration of temperature sensors in annealing line', '2026-01-07 09:00:00', '2026-01-07 15:00:00'),
+(5, 'Cleaning and descaling of water treatment filters', '2026-01-08 08:00:00', '2026-01-08 20:00:00'),
+(6, 'Repair of conveyor belt drive motor', '2026-01-09 06:00:00', '2026-01-09 14:00:00'),
+(7, 'Replacement of damaged ladle refractory lining', '2026-01-10 07:00:00', '2026-01-14 19:00:00'),
+(8, 'Preventive maintenance on air compressors', '2026-01-11 08:00:00', '2026-01-11 18:00:00'),
+(9, 'Alignment check for continuous casting rollers', '2026-01-12 07:00:00', '2026-01-12 17:00:00'),
+(10, 'Inspection and testing of emergency shutdown systems', '2026-01-13 08:00:00', '2026-01-13 16:00:00');
