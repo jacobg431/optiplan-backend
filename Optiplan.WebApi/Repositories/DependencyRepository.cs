@@ -25,7 +25,7 @@ public class DependencyRepository : IDependencyRepository
         EntityEntry<Dependency> added = await _dbContext.Dependencies.AddAsync(d);
         int affected = await _dbContext.SaveChangesAsync();
         if (affected == 1) {
-            _memoryCache.Set(d.Id, d.Name, _cacheEntryOptions);
+            _memoryCache.Set(d.Id, d, _cacheEntryOptions);
             return d;
         }
         return null;
@@ -60,7 +60,7 @@ public class DependencyRepository : IDependencyRepository
         _dbContext.Dependencies.Update(d);
         int affected = await _dbContext.SaveChangesAsync();
         if (affected == 1) {
-            _memoryCache.Set(d.Id, d.Name, _cacheEntryOptions);
+            _memoryCache.Set(d.Id, d, _cacheEntryOptions);
             return d;
         }
         return null;

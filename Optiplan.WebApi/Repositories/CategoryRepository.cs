@@ -25,7 +25,7 @@ public class CategoryRepository : ICategoryRepository
         EntityEntry<Category> added = await _dbContext.Categories.AddAsync(c);
         int affected = await _dbContext.SaveChangesAsync();
         if (affected == 1) {
-            _memoryCache.Set(c.Id, c.Name, _cacheEntryOptions);
+            _memoryCache.Set(c.Id, c, _cacheEntryOptions);
             return c;
         }
         return null;
@@ -60,7 +60,7 @@ public class CategoryRepository : ICategoryRepository
         _dbContext.Categories.Update(c);
         int affected = await _dbContext.SaveChangesAsync();
         if (affected == 1) {
-            _memoryCache.Set(c.Id, c.Name, _cacheEntryOptions);
+            _memoryCache.Set(c.Id, c, _cacheEntryOptions);
             return c;
         }
         return null;

@@ -25,7 +25,7 @@ public class WorkOrderRepository : IWorkOrderRepository
         EntityEntry<WorkOrder> added = await _dbContext.WorkOrders.AddAsync(w);
         int affected = await _dbContext.SaveChangesAsync();
         if (affected == 1) {
-            _memoryCache.Set(w.Id, w.Name, _cacheEntryOptions);
+            _memoryCache.Set(w.Id, w, _cacheEntryOptions);
             return w;
         }
         return null;
@@ -60,7 +60,7 @@ public class WorkOrderRepository : IWorkOrderRepository
         _dbContext.WorkOrders.Update(w);
         int affected = await _dbContext.SaveChangesAsync();
         if (affected == 1) {
-            _memoryCache.Set(w.Id, w.Name, _cacheEntryOptions);
+            _memoryCache.Set(w.Id, w, _cacheEntryOptions);
             return w;
         }
         return null;
