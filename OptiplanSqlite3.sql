@@ -22,24 +22,10 @@ CREATE TABLE IF NOT EXISTS `Dependency` (
   `Tooltip` VARCHAR(500) NULL,
   `CategoryId` INT NOT NULL,
   `MultipleInstances` TINYINT NOT NULL DEFAULT 0,
-  `InputField1` TINYINT NOT NULL DEFAULT 0,
-  `InputField1Label` VARCHAR(500) NULL,
-  `InputField2` TINYINT NOT NULL DEFAULT 0,
-  `InputField2Label` VARCHAR(500) NULL,
-  `DropdownMenu` TINYINT NOT NULL DEFAULT 0,
-  `DropdownOptions` VARCHAR(500) NULL,
-  `RadioButtons` TINYINT NOT NULL DEFAULT 0,
-  `RadioOptions` VARCHAR(500) NULL,
-  `CheckboxButtons` TINYINT NOT NULL DEFAULT 0,
-  `CheckboxOptions` VARCHAR(500) NULL,
-  `Slider` TINYINT NOT NULL DEFAULT 0,
-  `SliderMin` INT NULL,
-  `SliderMax` INT NULL,
-  `SliderRange` TINYINT NOT NULL DEFAULT 0,
-  `DateTimePicker` TINYINT NOT NULL DEFAULT 0,
-  `DateTimeRange` TINYINT NOT NULL DEFAULT 0,
-  `RequiredDependencyId` INT NULL,
-  `RecommendedDependencyId` INT NULL,
+  `TextAttributeLabel` VARCHAR(100) NULL,
+  `IntegerAttributeLabel` VARCHAR(100) NULL,
+  `NumberAttributeLabel` VARCHAR(100) NULL,
+  `BooleanAttributeLabel` VARCHAR(100) NULL,
   CONSTRAINT `fk_Dependency_Category1`
     FOREIGN KEY (`CategoryId`)
     REFERENCES `Category` (`Id`)
@@ -58,9 +44,8 @@ CREATE TABLE IF NOT EXISTS `WorkOrder` (
   `Id` INT PRIMARY KEY,
   `Name` VARCHAR(100) NOT NULL,
   `Start` DATETIME NULL,
-  `End` DATETIME NULL
-);
-
+  `Stop` DATETIME NULL
+)
 
 -- -----------------------------------------------------
 -- Table `WorkOrderToDependency`
@@ -71,15 +56,12 @@ CREATE TABLE IF NOT EXISTS `WorkOrderToDependency` (
   `DependencyInstanceId` INT NOT NULL,
   `DependencyId` INT NOT NULL,
   `WorkOrderId` INT NOT NULL,
-  `InputField1Value` VARCHAR(500) NULL,
-  `InputField2Value` VARCHAR(500) NULL,
-  `DropdownOptionSelected` VARCHAR(100) NULL,
-  `RadioOptionSelected` VARCHAR(100) NULL,
-  `CheckboxOptionSelected` VARCHAR(100) NULL,
-  `SliderMinValue` INT NULL,
-  `SliderMaxValue` INT NULL,
-  `Start` DATETIME NULL,
-  `End` DATETIME NULL,
+  `TextAttributeValue` VARCHAR(500) NULL,
+  `IntegerAttributeValue` INT NULL,
+  `NumberAttributeValue` DOUBLE NULL,
+  `BooleanAttributeValue` TINYINT NULL,
+  `StartDateTime` DATETIME NULL,
+  `StopDateTime` DATETIME NULL,
   PRIMARY KEY (`DependencyInstanceId`, `DependencyId`, `WorkOrderId`),
   CONSTRAINT `fk_WorkOrderToDependency_Dependency`
     FOREIGN KEY (`DependencyId`)
@@ -94,18 +76,6 @@ CREATE TABLE IF NOT EXISTS `WorkOrderToDependency` (
 );
 CREATE INDEX `fk_WorkOrderToDependency_Dependency_idx` ON `WorkOrderToDependency` (`DependencyId` ASC);
 CREATE INDEX `fk_WorkOrderToDependency_WorkOrder1_idx` ON `WorkOrderToDependency` (`WorkOrderId` ASC);
-
-
--- -----------------------------------------------------
--- Table `Currency`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `Currency` ;
-
-CREATE TABLE IF NOT EXISTS `Currency` (
-  `Id` INT PRIMARY KEY,
-  `Country` VARCHAR(100) NOT NULL,
-  `Code` CHAR(3) NOT NULL
-);
 
 -- -----------------------------------------------------
 -- INSERT INTO Table `Category`
@@ -122,7 +92,7 @@ INSERT INTO Category (Id, Name) VALUES
 -- -----------------------------------------------------
 -- INSERT INTO Table `Dependency`
 -- -----------------------------------------------------
-INSERT INTO Category (
+INSERT INTO Dependency (
     Id, Name, Tooltip, CategoryId, MultipleInstances, InputField1, InputField1Label, InputField2, 
     InputField2Label, DropdownMenu, DropdownOptions, RadioButtons, RadioOptions, CheckboxButtons, 
     CheckboxOptions, Slider, SliderMin, SliderMax, SliderRange, DateTimePicker, DateTimeRange, 
