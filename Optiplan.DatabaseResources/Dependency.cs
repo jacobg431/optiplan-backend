@@ -16,7 +16,6 @@ public partial class Dependency
     public int Id { get; set; }
 
     [Column(TypeName = "VARCHAR(100)")]
-    [Required]
     [StringLength(100)]
     public string Name { get; set; } = null!;
 
@@ -32,73 +31,21 @@ public partial class Dependency
     [DefaultValue(0)]
     public byte MultipleInstances { get; set; }
 
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte InputField1 { get; set; }
+    [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
+    public string? TextAttributeLabel { get; set; }
 
-    [Column(TypeName = "VARCHAR(500)")]
-    [StringLength(500)]
-    public string? InputFieldLabel { get; set; }
+    [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
+    public string? IntegerAttributeLabel { get; set; }
 
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte InputField2 { get; set; }
+    [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
+    public string? NumberAttributeLabel { get; set; }
 
-    [Column(TypeName = "VARCHAR(500)")]
-    [StringLength(500)]
-    public string? InputField2Label { get; set; }
-
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte DropdownMenu { get; set; }
-
-    [Column(TypeName = "VARCHAR(500)")]
-    [StringLength(500)]
-    public string? DropdownOptions { get; set; }
-
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte RadioButtons { get; set; }
-
-    [Column(TypeName = "VARCHAR(500)")]
-    [StringLength(500)]
-    public string? RadioOptions { get; set; }
-
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte CheckboxButtons { get; set; }
-
-    [Column(TypeName = "VARCHAR(500)")]
-    [StringLength(500)]
-    public string? CheckboxOptions { get; set; }
-
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte Slider { get; set; }
-
-    [Column(TypeName = "INT")]
-    public int? SliderMin { get; set; }
-
-    [Column(TypeName = "INT")]
-    public int? SliderMax { get; set; }
-
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte SliderRange { get; set; }
-
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte DateTimePicker { get; set; }
-
-    [Column(TypeName = "TINYINT")]
-    [DefaultValue(0)]
-    public byte DateTimeRange { get; set; }
-
-    [Column(TypeName = "INT")]
-    public int? RequiredDependencyId { get; set; }
-
-    [Column(TypeName = "INT")]
-    public int? RecommendedDependencyId { get; set; }
+    [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
+    public string? BooleanAttributeLabel { get; set; }
 
     [ForeignKey("CategoryId")]
     [InverseProperty("Dependencies")]

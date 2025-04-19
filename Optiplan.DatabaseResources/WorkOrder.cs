@@ -19,10 +19,10 @@ public partial class WorkOrder
     public string Name { get; set; } = null!;
 
     [Column(TypeName = "DATETIME")]
-    public DateTime? Start { get; set; }
+    public DateTime? StartDateTime { get; set; }
 
     [Column(TypeName = "DATETIME")]
-    public DateTime? End { get; set; }
+    public DateTime? StopDateTime { get; set; }
 
     [InverseProperty("WorkOrder")]
     public virtual ICollection<WorkOrderToDependency> WorkOrderToDependencies { get; set; } = new List<WorkOrderToDependency>();

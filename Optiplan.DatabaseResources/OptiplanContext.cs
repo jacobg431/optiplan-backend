@@ -56,29 +56,7 @@ public partial class OptiplanContext : DbContext
     {
 
         modelBuilder.Entity<Dependency>(entity =>
-        {
-            entity.Property(e => e.MultipleInstances).HasConversion<bool>();
-            entity.Property(e => e.InputField1).HasConversion<bool>();
-            entity.Property(e => e.InputField2).HasConversion<bool>();
-            entity.Property(e => e.DropdownMenu).HasConversion<bool>();
-            entity.Property(e => e.RadioButtons).HasConversion<bool>();
-            entity.Property(e => e.CheckboxButtons).HasConversion<bool>();
-            entity.Property(e => e.Slider).HasConversion<bool>();
-            entity.Property(e => e.SliderRange).HasConversion<bool>();
-            entity.Property(e => e.DateTimePicker).HasConversion<bool>();
-            entity.Property(e => e.DateTimeRange).HasConversion<bool>();
-
-            entity.Property(e => e.MultipleInstances).HasDefaultValueSql("0");
-            entity.Property(e => e.InputField1).HasDefaultValueSql("0");
-            entity.Property(e => e.InputField2).HasDefaultValueSql("0");
-            entity.Property(e => e.DropdownMenu).HasDefaultValueSql("0");
-            entity.Property(e => e.RadioButtons).HasDefaultValueSql("0");
-            entity.Property(e => e.CheckboxButtons).HasDefaultValueSql("0");
-            entity.Property(e => e.Slider).HasDefaultValueSql("0");
-            entity.Property(e => e.SliderRange).HasDefaultValueSql("0");
-            entity.Property(e => e.DateTimePicker).HasDefaultValueSql("0");
-            entity.Property(e => e.DateTimeRange).HasDefaultValueSql("0");
-            
+        {            
             entity.HasOne(d => d.Category).WithMany(p => p.Dependencies).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
