@@ -43,9 +43,9 @@ DROP TABLE IF EXISTS `WorkOrder` ;
 CREATE TABLE IF NOT EXISTS `WorkOrder` (
   `Id` INT PRIMARY KEY,
   `Name` VARCHAR(100) NOT NULL,
-  `Start` DATETIME NULL,
-  `Stop` DATETIME NULL
-)
+  `StartDateTime` DATETIME NULL,
+  `StopDateTime` DATETIME NULL
+);
 
 -- -----------------------------------------------------
 -- Table `WorkOrderToDependency`
@@ -87,68 +87,66 @@ INSERT INTO Category (Id, Name) VALUES
 (4, 'Economy'),
 (5, 'Human Resources'),
 (6, 'Access and Logistics'),
-(7, 'Materials and Equipment')
+(7, 'Materials and Equipment');
 
 -- -----------------------------------------------------
 -- INSERT INTO Table `Dependency`
 -- -----------------------------------------------------
 INSERT INTO Dependency (
-    Id, Name, Tooltip, CategoryId, MultipleInstances, InputField1, InputField1Label, InputField2, 
-    InputField2Label, DropdownMenu, DropdownOptions, RadioButtons, RadioOptions, CheckboxButtons, 
-    CheckboxOptions, Slider, SliderMin, SliderMax, SliderRange, DateTimePicker, DateTimeRange, 
-    RecommendedDependencyId, RecommendedDependencyId
+    Id, Name, Tooltip, CategoryId, MultipleInstances, TextAttributeLabel, IntegerAttributeLabel, 
+    NumberAttributeLabel, BooleanAttributeLabel
 ) VALUES
 (
-    1, 'Other Projects', 
-    'Specify other projects this project depends on, and whether those projects must have started or finished before this project can start.',
-    3, 1, 1, 'Project', 0, NULL, 1, 'Has strated;Has finished', 0, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, NULL, NULL
+    1, 'Other work orders', 
+    'Specify other work orders this work order depends on, and whether those work orders must have started or finished before this work order can start.',
+    3, 1, 'Work order', NULL, NULL, 'Has finished'
 ),
 (
-    2, 'Project Start (Earliest)', 'The earliest date and time the project can begin.',
-    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 0, NULL, NULL
+    2, 'work order Start (Earliest)', 'The earliest date and time the work order can begin.',
+    3, 0, NULL, NULL, NULL, NULL
 ),
 (
-    3, 'Project Start (Latest)', 'The latest date and time the project can begin.',
-    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 0, NULL, NULL
+    3, 'work order Start (Latest)', 'The latest date and time the work order can begin.',
+    3, 0, NULL, NULL, NULL, NULL
 ),
 (
-    4, 'Project Deadline', 'The latest date and time the project must be concluded.',
-    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 0, NULL, NULL
+    4, 'work order Deadline', 'The latest date and time the work order must be concluded.',
+    3, 0, NULL, NULL, NULL, NULL
 ),
 (
-    5, 'Specialists', 'Specify the specialists to assign to this project, and whether they are internally employed or externally hired.',
-    5, 1, 1, 'Full name', 1, 'Specialist role', 0, NULL, 1, 'Internal;External', 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+    5, 'Specialists', 'Specify the specialists to assign to this work order, and whether they are internally employed or externally hired.',
+    5, 1, 'Role', 'Amount', NULL, 'External'
 ),
 (
-    6, 'Materials and Parts', 'Materials and (spare) parts that will be consumed during the project.',
-    7, 1, 1, 'Material or part', 1, 'Amount', 1, 'Items;Kilograms;Liters', 0, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, NULL, NULL
+    6, 'Materials and Parts', 'Materials and (spare) parts that will be consumed during the work order.',
+    7, 1, 'Material or part', NULL, 'Amount', 'In storage'
 ),
 (
-    7, 'Locations', 'The locations where the project will be carried out.',
-    6, 1, 1, 'Location', 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+    7, 'Locations', 'The locations where the work order will be carried out.',
+    6, 1, 'Location', NULL, NULL, NULL
 ),
 (
-    8, 'Locations to Close off', 'The locations where the project will be carried out.',
-    6, 1, 1, 'Location', 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+    8, 'Locations to Close off', 'The locations where the work order will be carried out.',
+    6, 1, 'Location', NULL, NULL, NULL
 ),
 (
     9, 'Criticality', 'Criticality level on a scale of 1-5, where 1 is low and 5 is uttermost.',
-    3, 0, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 1, 1, 5, 0, 0, 0, NULL, NULL
+    3, 0, NULL, 'Criticality', NULL, NULL
 ),
 (
-    10, 'Security Risks', 'The locations where the project will be carried out.',
-    2, 1, 1, 'Location', 1, 'Description', 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 1, 1, NULL, NULL
+    10, 'Security Risks', 'The locations where the work order will be carried out.',
+    2, 1, 'Description', 'Severity', NULL, NULL 
 ),
 (
-    11, 'Calculatory Costs', 'Estimated costs per day if project is not carried out.',
-    4, 0, 1, 'Estimated calculatory costs', 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, NULL, NULL
-)
+    11, 'Calculatory Costs', 'Estimated costs per day if work order is not carried out.',
+    4, 0, NULL, NULL, 'Estimated calculatory costs', NULL
+);
 
 -- -----------------------------------------------------
 -- INSERT INTO Table `WorkOrder`
 -- -----------------------------------------------------
 
-INSERT INTO WorkOrder (Id, Name, Start, End) VALUES
+INSERT INTO WorkOrder (Id, Name, StartDateTime, StopDateTime) VALUES
 (1, 'Lubrication of rolling mill bearings', '2026-01-05 08:00:00', '2026-01-05 16:00:00'),
 (2, 'Replacement of blast furnace cooling pipes', '2026-01-06 07:00:00', '2026-01-10 18:00:00'),
 (3, 'Inspection of overhead crane rails', '2026-01-05 18:00:00', '2026-01-06 02:00:00'),
