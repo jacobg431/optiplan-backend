@@ -36,6 +36,16 @@ public class WorkOrderToDependencyRepository : IWorkOrderToDependencyRepository
         return _dbContext.WorkOrderToDependencies.ToArrayAsync();
     }
 
+    public Task<WorkOrderToDependency[]> RetrieveByWorkOrderId(int id)
+    {
+        return _dbContext.WorkOrderToDependencies.Where(w => w.WorkOrderId == id).ToArrayAsync();
+    }
+
+    public Task<WorkOrderToDependency[]> RetrieveByDependencyId(int id)
+    {
+        return _dbContext.WorkOrderToDependencies.Where(w => w.DependencyId == id).ToArrayAsync();
+    }
+
     public async Task<WorkOrderToDependency?> RetrieveAsync(int id)
     {
         // Try to get from cache first

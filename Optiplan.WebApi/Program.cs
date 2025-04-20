@@ -15,6 +15,7 @@ builder.Services.AddOptiplanContext();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IDependencyRepository, DependencyRepository>();
 builder.Services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
+builder.Services.AddScoped<IWorkOrderToDependencyRepository, WorkOrderToDependencyRepository>();
 
 var app = builder.Build();
 
