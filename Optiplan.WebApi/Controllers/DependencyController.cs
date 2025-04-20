@@ -9,10 +9,18 @@ namespace Optiplan.WebApi.Controllers;
 public class DependencyController : ControllerBase
 {
     private readonly IDependencyRepository _repository;
+    private readonly IWorkOrderToDependencyRepository _workOrderToDependencyRepository;
+    private readonly IWorkOrderRepository _workOrderRepository;
 
-    public DependencyController(IDependencyRepository repository)
+    public DependencyController(
+        IDependencyRepository repository,
+        IWorkOrderToDependencyRepository workOrderToDependencyRepository,
+        IWorkOrderRepository workOrderRepository
+    )
     {
         _repository = repository;
+        _workOrderToDependencyRepository = workOrderToDependencyRepository;
+        _workOrderRepository = workOrderRepository;   
     }
 
     // GET: api/dependencies
@@ -35,6 +43,30 @@ public class DependencyController : ControllerBase
             return NotFound();
         }
         return Ok(d);
+    }
+
+    // GET: api/dependencies/[id]/workorders
+    [HttpGet("{id}/workorders")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<object>))]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetDependencyWorkOrders(int id)
+    {
+        Dependency? dependency = await _repository.RetrieveAsync(id);
+        if (dependency == null)
+        {
+            return NotFound();
+        }
+
+        IEnumerable<WorkOrderToDependency> workOrderToDependencies = await _workOrderToDependencyRepository.RetrieveByDependencyId(id);
+        IEnumerable<WorkOrder> workOrders = await _workOrderRepository.RetrieveAllAsync();
+        var result = workOrderToDependencies.Join(workOrders, wotd => wotd.DependencyId, wo => wo.Id, (wotd, wo) => new {
+            wotd.DependencyInstanceId,
+            wo.Name,
+            wo.StartDateTime,
+            wo.StopDateTime
+        });
+
+        return Ok(result);
     }
 
     // POST: api/dependencies/[id]
