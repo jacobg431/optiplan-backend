@@ -156,7 +156,7 @@ INSERT INTO WorkOrder (Id, Name, StartDateTime, StopDateTime) VALUES
 (7, 'Electrical Panel Audit', '2024-05-03 11:00:00', '2024-05-05 13:00:00'),
 (8, 'Emergency Power System Test', '2024-05-01 10:00:00', '2024-05-03 15:00:00'),
 (9, 'Helideck Surface Inspection', '2024-05-02 10:00:00', '2024-05-05 14:00:00'),
-(10, 'Flare Stack Thermography', '2024-05-02 09:00:00', '2024-05-05 16:00:00')
+(10, 'Flare Stack Thermography', '2024-05-02 09:00:00', '2024-05-05 16:00:00'),
 
 (11, 'Anchor Chain Re-tensioning', '2024-04-30 09:00:00', '2024-05-01 13:00:00'),
 (12, 'Diving Bell Safety Inspection', '2024-04-30 09:00:00', '2024-05-03 16:00:00'),
@@ -167,7 +167,7 @@ INSERT INTO WorkOrder (Id, Name, StartDateTime, StopDateTime) VALUES
 (17, 'ROV Deployment Prep', '2024-05-03 08:00:00', '2024-05-05 16:00:00'),
 (18, 'Mud Circulation System Test', '2024-05-01 11:00:00', '2024-05-03 16:00:00'),
 (19, 'Wellhead Equipment Maintenance', '2024-04-29 10:00:00', '2024-05-05 16:00:00'),
-(20, 'Blowout Preventer Test', '2024-05-01 10:00:00', '2024-05-05 13:00:00')
+(20, 'Blowout Preventer Test', '2024-05-01 10:00:00', '2024-05-05 13:00:00'),
 
 (21, 'Living Quarters HVAC Service', '2024-05-02 11:00:00', '2024-05-05 13:00:00'),
 (22, 'Ballast Control Panel Upgrade', '2024-04-30 08:00:00', '2024-05-03 13:00:00'),
@@ -208,7 +208,7 @@ INSERT INTO WorkOrderToDependency (
 (20, 1, 23, 4, 0),
 (21, 1, 23, 27, 0),
 (22, 1, 24, 5, 0),
-(22, 1, 24, 25, 0);
+(23, 1, 24, 25, 0);
 
 -- Work Order Start (Earliest)
 INSERT INTO WorkOrderToDependency (
@@ -262,7 +262,7 @@ INSERT INTO WorkOrderToDependency (
 (212, 3, 13, '2024-05-01 12:00:00'),
 (213, 3, 14, '2024-04-30 10:00:00'),
 (214, 3, 15, '2024-05-02 11:00:00'),
-(215, 3, 16, '2024-04-29 09:00:00').
+(215, 3, 16, '2024-04-29 09:00:00'),
 (216, 3, 17, '2024-05-03 10:00:00'),
 (217, 3, 18, '2024-05-01 12:00:00'),
 (218, 3, 19, '2024-04-29 11:00:00'),
@@ -392,7 +392,7 @@ INSERT INTO WorkOrderToDependency (
 (525, 6, 23, 'Diving suit', 3, 1),
 (526, 6, 23, 'Underwater flashlight', 3, 1),
 (527, 6, 25, 'Flow Meters', 3, 0),
-(524, 6, 28, 'Wiring Kit', 2, 0);
+(528, 6, 28, 'Wiring Kit', 2, 0);
 
 -- Locations
 INSERT INTO WorkOrderToDependency (
@@ -451,10 +451,10 @@ INSERT INTO WorkOrderToDependency (
 (718, 8, 19, 'Wellhead Maintenance Zone'),
 (719, 8, 20, 'Well Access Stairway'),
 (721, 8, 22, 'Ballast Equipment Bay'),
-(723, 8, 24, 'Pump Room A'),
-(724, 8, 25, 'Pump Room A'),
-(725, 8, 26, 'Engine Room A'),
-(727, 8, 28, 'Surveillance Room');
+(722, 8, 24, 'Pump Room A'),
+(723, 8, 25, 'Pump Room A'),
+(724, 8, 26, 'Engine Room A'),
+(725, 8, 28, 'Surveillance Room');
 
 -- Criticality
 INSERT INTO WorkOrderToDependency (
@@ -487,7 +487,7 @@ INSERT INTO WorkOrderToDependency (
 (824, 9, 25, 1),
 (825, 9, 26, 2),
 (826, 9, 27, 5),
-(827, 9, 28, 5),
+(827, 9, 28, 5);
 
 -- Security Risks
 INSERT INTO WorkOrderToDependency (
