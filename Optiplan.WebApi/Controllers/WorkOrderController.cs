@@ -49,11 +49,32 @@ public class WorkOrderController : ControllerBase
     [HttpGet("{id}/dependencies")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<object>))]
     [ProducesResponseType(404)]
-    public async Task<IEnumerable<object>> GetWorkOrderDependencies(int id)
+    public async Task<IActionResult> GetWorkOrderDependencies(int id)
     {
+        WorkOrder? workOrder = await _repository.RetrieveAsync(id);
+        if (workOrder == null)
+        {
+            return NotFound();
+        }
+
         IEnumerable<WorkOrderToDependency> workOrderToDependencies = await _workOrderToDependencyRepository.RetrieveByWorkOrderId(id);
         IEnumerable<Dependency> dependencies = await _dependencyRepository.RetrieveAllAsync();
-        return workOrderToDependencies.Join(dependencies, w => w.DependencyId, d => d.Id, (w, d) => w);
+        var result = workOrderToDependencies.Join(dependencies, w => w.DependencyId, d => d.Id, (w, d) => new {
+            w.DependencyInstanceId,
+            d.Name,
+            d.TextAttributeLabel,
+            d.IntegerAttributeLabel,
+            d.NumberAttributeLabel,
+            d.BooleanAttributeLabel,
+            w.TextAttributeValue,
+            w.IntegerAttributeValue,
+            w.NumberAttributeValue,
+            w.BooleanAttributeValue,
+            w.StartDateTime,
+            w.StopDateTime
+        });
+
+        return Ok(result);
     }
 
     // POST: api/workorders/[id]
