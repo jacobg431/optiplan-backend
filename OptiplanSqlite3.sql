@@ -165,7 +165,7 @@ INSERT INTO WorkOrder (Id, Name, StartDateTime, StopDateTime) VALUES
 (15, 'Pump Room Ventilation Check', '2024-05-02 09:00:00', '2024-05-05 14:00:00'),
 (16, 'Cathodic Protection Survey', '2024-04-29 08:00:00', '2024-05-03 13:00:00'),
 (17, 'ROV Deployment Prep', '2024-05-03 08:00:00', '2024-05-05 16:00:00'),
-(18, 'Mud Circulation System Test', '22024-05-01 11:00:00', '2024-05-03 16:00:00'),
+(18, 'Mud Circulation System Test', '2024-05-01 11:00:00', '2024-05-03 16:00:00'),
 (19, 'Wellhead Equipment Maintenance', '2024-04-29 10:00:00', '2024-05-05 16:00:00'),
 (20, 'Blowout Preventer Test', '2024-05-01 10:00:00', '2024-05-05 13:00:00')
 
@@ -194,21 +194,21 @@ INSERT INTO WorkOrderToDependency (
 (6, 1, 4, 8, 0),
 (7, 1, 5, 1, 0),
 (8, 1, 5, 12, 0),
-(9, 1, 6, 10, 0),
-(10, 1, 6, 20, 0),
-(11, 1, 7, 5, 0),
-(12, 1, 7, 7, 0),
-(13, 1, 8, 15, 0)
-(14, 1, 9, 9, 0),
-(15, 1, 9, 18, 0),
-(16, 1, 10, 10, 0),
-(17, 1, 10, 20, 0),
-(18, 1, 11, 10, 0),
-(19, 1, 11, 20, 0),
-(20, 1, 12, 15, 0),
-(21, 1, 12, 10, 0),
-(22, 1, 13, 20, 0),
-(23, 1, 13, 15, 0);
+(9, 1, 7, 16, 0),
+(10, 1, 10, 9, 0),
+(11, 1, 10, 7, 0),
+(12, 1, 11, 28, 0),
+(13, 1, 11, 22, 0),
+(14, 1, 13, 10, 0),
+(15, 1, 14, 8, 0),
+(16, 1, 17, 22, 0),
+(17, 1, 18, 9, 0),
+(18, 1, 21, 28, 0),
+(19, 1, 21, 6, 0),
+(20, 1, 23, 4, 0),
+(21, 1, 23, 27, 0),
+(22, 1, 24, 5, 0),
+(22, 1, 24, 25, 0);
 
 -- Work Order Start (Earliest)
 INSERT INTO WorkOrderToDependency (
@@ -219,14 +219,29 @@ INSERT INTO WorkOrderToDependency (
 (102, 2, 3, '2024-05-02 08:00:00'),
 (103, 2, 4, '2024-04-30 08:00:00'),
 (104, 2, 5, '2024-05-01 09:00:00'),
-(105, 2, 6, '2024-05-02 08:00:00'),
+(105, 2, 6, '2024-04-27 11:00:00'),
 (106, 2, 7, '2024-05-03 09:00:00'),
-(107, 2, 8, '2024-05-04 07:30:00'),
+(107, 2, 8, '2024-05-01 06:00:00'),
 (108, 2, 9, '2024-05-02 08:00:00'),
 (109, 2, 10, '2024-05-02 07:00:00'),
 (110, 2, 11, '2024-04-30 07:00:00'),
 (111, 2, 12, '2024-04-30 07:30:00'),
-(112, 2, 13, '2024-05-01 08:00:00');
+(112, 2, 13, '2024-05-01 08:00:00'),
+(113, 2, 14, '2024-04-30 06:30:00'),
+(114, 2, 15, '2024-05-02 07:00:00'),
+(115, 2, 16, '2024-04-29 06:00:00'),
+(116, 2, 17, '2024-05-03 07:00:00'),
+(117, 2, 18, '2024-05-01 09:30:00'),
+(118, 2, 19, '2024-04-29 08:00:00'),
+(119, 2, 20, '2024-05-01 08:00:00'),
+(120, 2, 21, '2024-05-02 08:00:00'),
+(121, 2, 22, '2024-04-30 07:30:00'),
+(122, 2, 23, '2024-04-27 09:00:00'),
+(123, 2, 24, '2024-04-29 06:00:00'),
+(124, 2, 25, '2024-04-27 11:00:00'),
+(125, 2, 26, '2024-04-24 09:00:00'),
+(126, 2, 27, '2024-05-02 10:00:00'),
+(127, 2, 28, '2024-05-01 08:00:00');
 
 -- Work Order Start (Latest)
 INSERT INTO WorkOrderToDependency (
@@ -237,14 +252,29 @@ INSERT INTO WorkOrderToDependency (
 (202, 3, 3, '2024-05-02 12:00:00'),
 (203, 3, 4, '2024-04-30 09:30:00'),
 (204, 3, 5, '2024-05-01 12:00:00'),
-(205, 3, 6, '2024-05-02 14:00:00'),
-(206, 3, 7, '2024-05-03 14:00:00'),
-(207, 3, 8, '2024-05-04 12:00:00'),
+(205, 3, 6, '2024-04-29 11:00:00'),
+(206, 3, 7, '2024-05-03 15:00:00'),
+(207, 3, 8, '2024-05-04 06:00:00'),
 (208, 3, 9, '2024-05-02 11:00:00'),
 (209, 3, 10, '2024-05-02 10:00:00'),
 (210, 3, 11, '2024-04-30 10:30:00'),
 (211, 3, 12, '2024-04-30 11:00:00'),
-(212, 3, 13, '2024-05-01 12:00:00');
+(212, 3, 13, '2024-05-01 12:00:00'),
+(213, 3, 14, '2024-04-30 10:00:00'),
+(214, 3, 15, '2024-05-02 11:00:00'),
+(215, 3, 16, '2024-04-29 09:00:00').
+(216, 3, 17, '2024-05-03 10:00:00'),
+(217, 3, 18, '2024-05-01 12:00:00'),
+(218, 3, 19, '2024-04-29 11:00:00'),
+(219, 3, 20, '2024-05-01 11:00:00'),
+(220, 3, 21, '2024-05-02 12:00:00'),
+(221, 3, 22, '2024-04-30 10:00:00'),
+(222, 2, 23, '2024-04-29 09:00:00'),
+(223, 2, 24, '2024-04-29 10:00:00'),
+(224, 2, 25, '2024-04-29 11:00:00'),
+(225, 2, 26, '2024-04-29 09:00:00'),
+(226, 2, 27, '2024-05-02 10:00:00'),
+(227, 2, 28, '2024-05-01 10:00:00');
 
 -- Work Order Deadline
 INSERT INTO WorkOrderToDependency (
@@ -262,7 +292,22 @@ INSERT INTO WorkOrderToDependency (
 (309, 4, 10, '2024-05-05 15:30:00'),
 (310, 4, 11, '2024-05-01 12:30:00'),
 (311, 4, 12, '2024-05-03 15:30:00'),
-(312, 4, 13, '2024-05-05 15:30:00');
+(312, 4, 13, '2024-05-05 15:30:00'),
+(313, 4, 14, '2024-05-04 15:30:00'),
+(314, 4, 15, '2024-05-05 13:30:00'),
+(315, 4, 16, '2024-05-03 12:30:00'),
+(316, 4, 17, '2024-05-05 15:30:00'),
+(317, 4, 18, '2024-05-03 15:30:00'),
+(318, 4, 19, '2024-05-05 15:30:00'),
+(319, 4, 20, '2024-05-05 12:30:00'),
+(320, 4, 21, '2024-05-05 12:00:00'),
+(321, 4, 22, '2024-05-03 12:00:00'),
+(322, 2, 23, '2024-05-01 18:00:00'),
+(323, 2, 24, '2024-05-04 14:00:00'),
+(324, 2, 25, '2024-05-02 16:00:00'),
+(325, 2, 26, '2024-05-06 15:00:00'),
+(326, 2, 27, '2024-05-04 16:00:00'),
+(327, 2, 28, '2024-05-04 15:00:00');
 
 -- Specialists
 INSERT INTO WorkOrderToDependency (
@@ -289,13 +334,37 @@ INSERT INTO WorkOrderToDependency (
 (418, 5, 12, 'Diver', 2, 0),
 (419, 5, 12, 'Dive Supervisor', 1, 0),
 (420, 5, 13, 'Naval Architect', 1, 0),
-(421, 5, 13, 'Structural Engineer', 1, 0);
+(421, 5, 13, 'Structural Engineer', 1, 0),
+(422, 5, 14, 'Gas Detection Technician', 2, 0),
+(423, 5, 14, 'Safety Supervisor', 1, 0),
+(424, 5, 15, 'HVAC Technician', 2, 0),
+(425, 5, 16, 'Corrosion Engineer', 1, 0),
+(426, 5, 16, 'Survey Specialist', 1, 0),
+(427, 5, 17, 'ROV Pilot', 2, 0),
+(428, 5, 18, 'Mud Engineer', 1, 0),
+(429, 5, 18, 'Drilling Supervisor', 1, 0),
+(430, 5, 19, 'Subsea Engineer', 1, 0),
+(431, 5, 19, 'Wellhead Technician', 2, 0),
+(432, 5, 20, 'Subsea Supervisor', 1, 0),
+(433, 5, 20, 'Pressure Test Engineer', 1, 0),
+(434, 5, 21, 'HVAC Technician', 2, 0),
+(435, 5, 22, 'Control Systems Engineer', 1, 0),
+(436, 5, 22, 'Electrician', 1, 0),
+(437, 5, 23, 'Diver', 1, 0),
+(438, 5, 23, 'Dive Supervisor', 1, 0),
+(439, 5, 24, 'Mechanical Engineer', 1, 0),
+(440, 5, 25, 'Flush Systems Operator', 1, 0),
+(441, 5, 26, 'Mechanic', 2, 0),
+(442, 5, 26, 'Safety Officer', 2, 0),
+(443, 5, 27, 'Structural Engineer', 1, 0),
+(444, 5, 27, 'Safety Supervisor', 1, 0),
+(445, 5, 28, 'Electrician', 1, 0);
 
 -- Materials and parts
 INSERT INTO WorkOrderToDependency (
     DependencyInstanceId, DependencyId, WorkOrderId, TextAttributeValue, NumberAttributeValue, BooleanAttributeValue
 ) VALUES
-(500, 6, 2, 'Steel wire rope in meters', 100, 1),
+(500, 6, 2, 'Steel wire rope (meters)', 100, 1),
 (501, 6, 3, 'Cylinder', 2, 0),
 (502, 6, 4, 'Fire hose binding machine', 3, 1),
 (503, 6, 6, 'High-voltage cables (meters)', 50, 1),
@@ -306,7 +375,24 @@ INSERT INTO WorkOrderToDependency (
 (508, 6, 11, 'Tension measuring gauge', 2, 1),
 (509, 6, 12, 'Diving suit', 3, 1),
 (510, 6, 12, 'Underwater flashlight', 3, 1),
-(511, 6, 13, 'Mooring tension sensor', 4, 0);
+(511, 6, 13, 'Mooring tension sensor', 4, 0),
+(512, 6, 14, 'Portable Gas Detectors', 5, 1),
+(513, 6, 14, 'Calibration Gas Cylinder', 2, 1),
+(514, 6, 15, 'Ventilation Flow Meter', 1, 1),
+(515, 6, 16, 'Potential Probe', 4, 0),
+(516, 6, 17, 'ROV Unit', 1, 1),
+(517, 6, 18, 'Mud Pump', 1, 0),
+(518, 6, 18, 'Flow Meters', 3, 0),
+(519, 6, 19, 'Valve Seal Kits', 10, 1),
+(520, 6, 19, 'Hydraulic Fluid', 20, 1),
+(521, 6, 20, 'BOP Test Plug', 1, 1),
+(522, 6, 21, 'Air Filters', 10, 0),
+(523, 6, 22, 'Control Panel', 1, 1),
+(524, 6, 22, 'Wiring Kit', 5, 0),
+(525, 6, 23, 'Diving suit', 3, 1),
+(526, 6, 23, 'Underwater flashlight', 3, 1),
+(527, 6, 25, 'Flow Meters', 3, 0),
+(524, 6, 28, 'Wiring Kit', 2, 0);
 
 -- Locations
 INSERT INTO WorkOrderToDependency (
@@ -324,7 +410,22 @@ INSERT INTO WorkOrderToDependency (
 (609, 7, 10, 'Flare Stack Platform'),
 (610, 7, 11, 'Anchor Winch Station'),
 (611, 7, 12, 'Diving Bell Hangar'),
-(612, 7, 13, 'Mooring Lines Platform');
+(612, 7, 13, 'Mooring Lines Platform'),
+(613, 7, 14, 'Process Gas Room'),
+(614, 7, 15, 'Pump Room A'),
+(615, 7, 16, 'External Hull Area'),
+(616, 7, 17, 'ROV Hangar Bay'),
+(617, 7, 18, 'Mud Pump Room'),
+(618, 7, 19, 'Wellhead Platform'),
+(619, 7, 20, 'Wellhead Deck'),
+(620, 7, 21, 'Living Quarters A Block'),
+(621, 7, 22, 'Ballast Control Room'),
+(622, 8, 23, 'Dive Operation Zone'),
+(623, 8, 24, 'Pump Room A'),
+(624, 8, 25, 'Pump Room A'),
+(625, 8, 26, 'Engine Room A'),
+(626, 8, 27, 'Platform Deck B'),
+(627, 8, 28, 'Surveillance Room');
 
 -- Locations to close off
 INSERT INTO WorkOrderToDependency (
@@ -342,7 +443,18 @@ INSERT INTO WorkOrderToDependency (
 (709, 8, 10, 'Flare Stack Base Area'),
 (710, 8, 11, 'Anchor Chain Lock Area'),
 (711, 8, 12, 'Dive Operation Zone'),
-(712, 8, 13, 'Mooring Chain Alley');
+(712, 8, 13, 'Mooring Chain Alley'),
+(713, 8, 14, 'Process Gas Room'),
+(714, 8, 15, 'Pump Room A'),
+(715, 8, 16, 'External Hull Maintenance Zone'),
+(717, 8, 18, 'Mud Control Room'),
+(718, 8, 19, 'Wellhead Maintenance Zone'),
+(719, 8, 20, 'Well Access Stairway'),
+(721, 8, 22, 'Ballast Equipment Bay'),
+(723, 8, 24, 'Pump Room A'),
+(724, 8, 25, 'Pump Room A'),
+(725, 8, 26, 'Engine Room A'),
+(727, 8, 28, 'Surveillance Room');
 
 -- Criticality
 INSERT INTO WorkOrderToDependency (
@@ -360,13 +472,28 @@ INSERT INTO WorkOrderToDependency (
 (809, 9, 10, 3),
 (810, 9, 11, 1),
 (811, 9, 12, 4),
-(812, 9, 13, 2);
+(812, 9, 13, 2),
+(813, 9, 14, 2),
+(814, 9, 15, 3),
+(815, 9, 16, 3),
+(816, 9, 17, 2),
+(817, 9, 18, 1),
+(818, 9, 19, 3),
+(819, 9, 20, 5),
+(820, 9, 21, 3),
+(821, 9, 22, 3),
+(822, 9, 23, 2),
+(823, 9, 24, 1),
+(824, 9, 25, 1),
+(825, 9, 26, 2),
+(826, 9, 27, 5),
+(827, 9, 28, 5),
 
 -- Security Risks
 INSERT INTO WorkOrderToDependency (
     DependencyInstanceId, DependencyId, WorkOrderId, TextAttributeValue, IntegerAttributeValue
 ) VALUES
-(900, 10, 1, 'Risk of explosion, implosion, or suction due to pressure differences', 2),
+(900, 10, 1, 'High pressure hazards', 2),
 (901, 10, 2, 'Falling objects hazards', 3),
 (902, 10, 3, 'Moving machines hazards', 3),
 (903, 10, 5, 'Moving machines hazards', 2),
@@ -376,7 +503,17 @@ INSERT INTO WorkOrderToDependency (
 (907, 10, 10, 'Fire and thermal hazards', 4),
 (908, 10, 11, 'Snap-back hazard', 3),
 (909, 10, 12, 'Diving hazards: loss of communication', 4),
-(910, 10, 13, 'Risk of line failure under tension', 3);
+(910, 10, 13, 'Risk of line failure under tension', 3),
+(911, 10, 14, 'Toxic gas exposure', 5),
+(912, 10, 16, 'Underwater hull hazards', 4),
+(913, 10, 17, 'ROV tether entanglement hazards', 4),
+(914, 10, 18, 'High-pressure mud line rupture', 4),
+(915, 10, 19, 'Wellhead pressure hazards', 5),
+(916, 10, 20, 'High-pressure test failure hazard', 5),
+(917, 10, 22, 'Electrical arc flash hazards', 3),
+(918, 10, 23, 'Environmental contamination hazards', 2),
+(919, 10, 25, 'High-pressure test failure hazards', 3),
+(920, 10, 26, 'Fire and thermal hazards', 3);
 
 -- Calculatory Costs
 INSERT INTO WorkOrderToDependency (
@@ -394,4 +531,19 @@ INSERT INTO WorkOrderToDependency (
 (1009, 11, 10, 27000),
 (1010, 11, 11, 12000),
 (1011, 11, 12, 22000),
-(1012, 11, 13, 30000);
+(1012, 11, 13, 30000),
+(1013, 11, 14, 18000),
+(1014, 11, 15, 14000),
+(1015, 11, 16, 24000),
+(1016, 11, 17, 35000),
+(1017, 11, 18, 20000),
+(1018, 11, 19, 45000),
+(1019, 11, 20, 50000),
+(1020, 11, 21, 18000),
+(1021, 11, 22, 25000),
+(1022, 11, 16, 24000),
+(1023, 11, 17, 35000),
+(1024, 11, 18, 20000),
+(1025, 11, 19, 45000),
+(1026, 11, 20, 50000),
+(1027, 11, 21, 18000);
