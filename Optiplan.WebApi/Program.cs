@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Optiplan.DatabaseResources;
 using Optiplan.WebApi.Repositories;
+using Optiplan.WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IDependencyRepository, DependencyRepository>();
 builder.Services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
 builder.Services.AddScoped<IWorkOrderToDependencyRepository, WorkOrderToDependencyRepository>();
+builder.Services.AddScoped<IOptimizationService, OptimizationService>();
 
 var app = builder.Build();
 
