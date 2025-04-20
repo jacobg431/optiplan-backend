@@ -1,11 +1,21 @@
+using Microsoft.Extensions.Caching.Memory;
+using Optiplan.DatabaseResources;
+using Optiplan.WebApi.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<IMemoryCache>(new MemoryCache(new MemoryCacheOptions()));
+
+builder.Services.AddOptiplanContext();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IDependencyRepository, DependencyRepository>();
+builder.Services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
+builder.Services.AddScoped<IWorkOrderToDependencyRepository, WorkOrderToDependencyRepository>();
 
 var app = builder.Build();
 

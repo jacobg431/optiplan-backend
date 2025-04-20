@@ -28,35 +28,22 @@ public partial class WorkOrderToDependency
 
     [Column(TypeName = "VARCHAR(500)")]
     [StringLength(500)]
-    public string? InputField1Value { get; set; }
-
-    [Column(TypeName = "VARCHAR(500)")]
-    [StringLength(100)]
-    public string? InputField2Value { get; set; }
-
-    [Column(TypeName = "VARCHAR(100)")]
-    [StringLength(100)]
-    public string? DropdownOptionSelected { get; set; }
-
-    [Column(TypeName = "VARCHAR(100)")]
-    [StringLength(100)]
-    public string? RadioOptionSelected { get; set; }
-
-    [Column(TypeName = "VARCHAR(100)")]
-    [StringLength(100)]
-    public string? CheckboxOptionSelected { get; set; }
+    public string? TextAttributeValue { get; set; }
 
     [Column(TypeName = "INT")]
-    public int? SliderMinValue { get; set; }
+    public int? IntegerAttributeValue { get; set; }
 
-    [Column(TypeName = "INT")]
-    public int? SliderMaxValue { get; set; }
+    [Column(TypeName = "DOUBLE")]
+    public double? NumberAttributeValue { get; set; }
+
+    [Column(TypeName = "TINYINT")]
+    public byte? BooleanAttributeValue { get; set; }
 
     [Column(TypeName = "DATETIME")]
-    public DateTime? Start { get; set; }
+    public DateTime? StartDateTime { get; set; }
 
     [Column(TypeName = "DATETIME")]
-    public DateTime? End { get; set; }
+    public DateTime? StopDateTime { get; set; }
 
     [ForeignKey("DependencyId")]
     [InverseProperty("WorkOrderToDependencies")]

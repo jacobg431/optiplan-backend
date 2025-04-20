@@ -56,14 +56,13 @@ public partial class OptiplanContext : DbContext
     {
 
         modelBuilder.Entity<Dependency>(entity =>
-        {
+        {            
             entity.HasOne(d => d.Category).WithMany(p => p.Dependencies).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<WorkOrderToDependency>(entity =>
         {
             entity.HasOne(d => d.Dependency).WithMany(p => p.WorkOrderToDependencies).OnDelete(DeleteBehavior.ClientSetNull);
-
             entity.HasOne(d => d.WorkOrder).WithMany(p => p.WorkOrderToDependencies).OnDelete(DeleteBehavior.ClientSetNull);
         });
 
