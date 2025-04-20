@@ -6,13 +6,13 @@ namespace Optiplan.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class DependencyController : ControllerBase
+public class DependenciesController : ControllerBase
 {
     private readonly IDependencyRepository _repository;
     private readonly IWorkOrderToDependencyRepository _workOrderToDependencyRepository;
     private readonly IWorkOrderRepository _workOrderRepository;
 
-    public DependencyController(
+    public DependenciesController(
         IDependencyRepository repository,
         IWorkOrderToDependencyRepository workOrderToDependencyRepository,
         IWorkOrderRepository workOrderRepository

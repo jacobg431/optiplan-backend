@@ -6,16 +6,16 @@ namespace Optiplan.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class WorkOrderToDependencyController : ControllerBase
+public class WorkOrdersToDependenciesController : ControllerBase
 {
     private readonly IWorkOrderToDependencyRepository _repository;
 
-    public WorkOrderToDependencyController(IWorkOrderToDependencyRepository repository)
+    public WorkOrdersToDependenciesController(IWorkOrderToDependencyRepository repository)
     {
         _repository = repository;
     }
 
-    // GET: api/workordertodependencies
+    // GET: api/workorderstodependencies
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<WorkOrderToDependency>))]
     public async Task<IEnumerable<WorkOrderToDependency>> GetWorkOrderToDependencies()
@@ -23,7 +23,7 @@ public class WorkOrderToDependencyController : ControllerBase
         return await _repository.RetrieveAllAsync();
     }
 
-    // GET: api/workordertodependencies/[id]
+    // GET: api/workorderstodependencies/[id]
     [HttpGet("{id}", Name = nameof(GetWorkOrderToDependency))] // Named in order to be referenced by other endpoints
     [ProducesResponseType(200, Type = typeof(WorkOrderToDependency))]
     [ProducesResponseType(404)]
@@ -37,7 +37,7 @@ public class WorkOrderToDependencyController : ControllerBase
         return Ok(w);
     }
 
-    // POST: api/workordertodependencies/[id]
+    // POST: api/workorderstodependencies/[id]
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(WorkOrderToDependency))]
     [ProducesResponseType(400)]
@@ -61,7 +61,7 @@ public class WorkOrderToDependencyController : ControllerBase
         );
     }
 
-    // PUT: api/workordertodependencies/[id]
+    // PUT: api/workorderstodependencies/[id]
     [HttpPut("{id}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
@@ -83,7 +83,7 @@ public class WorkOrderToDependencyController : ControllerBase
         return new NoContentResult();
     }
 
-    // DELETE: api/workordertodependencies/[id]
+    // DELETE: api/workorderstodependencies/[id]
     [HttpDelete("{id}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
