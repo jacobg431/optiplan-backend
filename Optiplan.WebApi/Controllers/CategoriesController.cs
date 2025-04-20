@@ -6,11 +6,11 @@ namespace Optiplan.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CategoryController : ControllerBase
+public class CategoriesController : ControllerBase
 {
     private readonly ICategoryRepository _repository;
 
-    public CategoryController(ICategoryRepository repository)
+    public CategoriesController(ICategoryRepository repository)
     {
         _repository = repository;
     }
