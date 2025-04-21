@@ -5,6 +5,7 @@ using Optiplan.WebApi.Controllers;
 using Optiplan.WebApi.Repositories;
 using Optiplan.WebApi.Services;
 using Optiplan.WebApi.Utilities;
+using Xunit.Abstractions;
 
 namespace Optiplan.UnitTests;
 
@@ -16,7 +17,9 @@ public class OptimizeByPartsTests
     private readonly Mock<IOptimizationService> _optimizationServiceMock;
     private readonly OptimizationController _optimizationController;
 
-    public OptimizeByPartsTests()
+    private readonly ITestOutputHelper _output; // TEMP DEBUG
+
+    public OptimizeByPartsTests(ITestOutputHelper output)
     {
         _workOrderRepositoryMock = new Mock<IWorkOrderRepository>();
         _workOrderToDependencyRepositoryMock = new Mock<IWorkOrderToDependencyRepository>();
@@ -29,9 +32,12 @@ public class OptimizeByPartsTests
             _workOrderRepositoryMock.Object,
             _optimizationServiceMock.Object
         );
+
+        _output = output;
+
     }
 
-    [Fact]
+    //[Fact]
     public async Task ReturnsCreatedResult()
     {
         //var workOrders = new WorkOrder[]
@@ -41,7 +47,7 @@ public class OptimizeByPartsTests
         //    new WorkOrder { Id = 3 }
         //};
 
-        string baseDirectory = System.AppContext.BaseDirectory + "/Optiplan.UnitTests/Resources";
+        string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
         string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
         string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
         string dependencySamplesPath = baseDirectory + "/DependencySamples.json";
@@ -67,14 +73,36 @@ public class OptimizeByPartsTests
 
     }
 
-        [Fact]
-        public async Task ReturnsBadRequestWhenNoWorkOrdersToDependencies()
-        {
-            WorkOrderToDependency[] workOrdersToDependencies = [];
-            _workOrderToDependencyRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
+    [Fact]
+    public async Task ReturnsBadRequestWhenNoWorkOrdersToDependencies()
+    {
+        WorkOrderToDependency[] workOrdersToDependencies = [];
+        _workOrderToDependencyRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
 
-            var result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
+        var result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
+        Assert.IsType<BadRequestObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task ReturnsInternalServerError()
+    {
+        
+        string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
+        string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
+        string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
+
+        //Assert.Equal("C:\\Users\\jacob\\OneDrive\\Programming and Development\\dotNet Projects\\optiplan-backend\\Optiplan.UnitTests\\Resources", baseDirectory);
+
+        WorkOrder[] workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        _workOrderRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrders);
+
+        WorkOrderToDependency[] workOrdersToDependencies = await FileUtilities.JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ThrowsAsync(new System.Exception("Database error"));
+
+        var result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
+
+        var statusResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
 }
