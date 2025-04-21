@@ -37,16 +37,10 @@ public class OptimizeByPartsTests
 
     }
 
-    //[Fact]
+    [Fact]
     public async Task ReturnsCreatedResult()
     {
-        //var workOrders = new WorkOrder[]
-        //{
-        //    new WorkOrder { Id = 1 },
-        //    new WorkOrder { Id = 2 },
-        //    new WorkOrder { Id = 3 }
-        //};
-
+ 
         string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
         string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
         string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
@@ -54,6 +48,8 @@ public class OptimizeByPartsTests
 
         WorkOrder[] workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
         _workOrderRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrders);
+
+        //_output.WriteLine(workOrders.Count().ToString());
         
         WorkOrderToDependency[] workOrdersToDependencies = await FileUtilities.JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
         _workOrderToDependencyRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
@@ -61,16 +57,15 @@ public class OptimizeByPartsTests
         Dependency[] dependencies = await FileUtilities.JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
         _dependencyRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(dependencies);
 
-        //_optimizationServiceMock.SetupSequence(s => s.OptimizeByPartsAsync(
-        //    It.IsAny<WorkOrderToDependency[]>())
-        //).ReturnsAsync();
+        _optimizationServiceMock.SetupSequence(s => s.OptimizeByPartsAsync(workOrdersToDependencies)).ReturnsAsync(workOrders);
 
-        var result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
+        ActionResult result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
+        //_output.WriteLine(((ObjectResult) result).StatusCode.ToString());
+        //_output.WriteLine(((ObjectResult) result).Value?.ToString());
 
         var createdResult = Assert.IsType<CreatedResult>(result);
         var optimizedData = Assert.IsAssignableFrom<IEnumerable<WorkOrder>>(createdResult.Value);
         Assert.Equal(dependencies.Count(), optimizedData.Count());
-
     }
 
     [Fact]
@@ -87,12 +82,9 @@ public class OptimizeByPartsTests
     [Fact]
     public async Task ReturnsInternalServerError()
     {
-        
         string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
         string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
         string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
-
-        //Assert.Equal("C:\\Users\\jacob\\OneDrive\\Programming and Development\\dotNet Projects\\optiplan-backend\\Optiplan.UnitTests\\Resources", baseDirectory);
 
         WorkOrder[] workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
         _workOrderRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrders);
