@@ -28,11 +28,38 @@ public class OptimizationController : ControllerBase
     }
 
     // POST: api/optimization/parts
-    [HttpPost]
+    [HttpPost("parts")]
     [ProducesResponseType(201, Type = typeof(IEnumerable<WorkOrder>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<ActionResult> OptimizeByParts([FromBody] IEnumerable<WorkOrderToDependency> wList)
+    public Task<ActionResult> OptimizeByParts([FromBody] IEnumerable<WorkOrderToDependency> wList)
+    {
+        return OptimizeAsync(wList, _optimizationService.OptimizeByPartsAsync);
+    }
+
+    // POST: api/optimization/costs
+    [HttpPost("costs")]
+    [ProducesResponseType(201, Type = typeof(IEnumerable<WorkOrder>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
+    public Task<ActionResult> OptimizeByCosts([FromBody] IEnumerable<WorkOrderToDependency> wList)
+    {
+        return OptimizeAsync(wList, _optimizationService.OptimizeByCostsAsync);
+    }
+
+    // POST: api/optimization/safety
+    [HttpPost("safety")]
+    [ProducesResponseType(201, Type = typeof(IEnumerable<WorkOrder>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
+    public Task<ActionResult> OptimizeBySafety([FromBody] IEnumerable<WorkOrderToDependency> wList)
+    {
+        return OptimizeAsync(wList, _optimizationService.OptimizeByCostsAsync);
+    }
+
+    // Private methods
+    
+    private async Task<ActionResult> DenormalizeData(IEnumerable<WorkOrderToDependency> wList)
     {
         if (wList == null || !wList.Any())
         {
@@ -59,7 +86,7 @@ public class OptimizationController : ControllerBase
         int expectedNumberOfWorkOrders = resultFirstJoin.Select(r => r.WorkOrderId).Distinct().Count();
         if (expectedNumberOfWorkOrders == 0)
         {
-            BadRequest("Request not containing references to valid work orders");
+            return BadRequest("Request not containing references to valid work orders");
         }
 
         var resultSecondJoin = resultFirstJoin.Join(dependencies, r => r.DependencyId, d => d.Id, (r, d) => new {
@@ -77,23 +104,42 @@ public class OptimizationController : ControllerBase
             d.Name
         });
 
-        IEnumerable<WorkOrder> workOrdersToReturn = await _optimizationService.OptimizeByPartsAsync(resultSecondJoin);
+        return Ok(new {
+            Data = resultSecondJoin, 
+            ExpectedCount = expectedNumberOfWorkOrders
+        });
+
+    }
+
+    private async Task<ActionResult> OptimizeAsync(
+        IEnumerable<WorkOrderToDependency> wList,
+        Func<object, Task<WorkOrder[]>> optimizationMethod
+    )
+    {
+        var denormalizedResult = await DenormalizeData(wList);
+        if (denormalizedResult is not OkObjectResult)
+        {
+            return denormalizedResult;
+        }
+
+        var resultValue = ((dynamic)(OkObjectResult)denormalizedResult).Value;
+        var resultSecondJoin = resultValue.Data;
+        int expectedCount = resultValue.ExpectedCount;
+
+        IEnumerable<WorkOrder> workOrdersToReturn = await optimizationMethod(resultSecondJoin);
         if (!workOrdersToReturn.Any())
         {
-            return StatusCode(500, "Error optimizing work orders.");
+            return StatusCode(500, "Error optimizing work orders");
         }
         
         int workOrdersReturned = workOrdersToReturn.Count(); 
-        if (workOrdersReturned != expectedNumberOfWorkOrders)
+        if (workOrdersReturned != expectedCount)
         {
-            return StatusCode(500, $"Client requested to optimize {expectedNumberOfWorkOrders} work orders, while server returned {workOrdersReturned}");
+            return StatusCode(500, $"Client requested to optimize {expectedCount} work orders, while server returned {workOrdersReturned}");
         }
 
         return StatusCode(201, value: workOrdersToReturn);
 
+
     }
-
-    // POST: api/optimization/costs
-
-    // POST: api/optimization/safety
 }
