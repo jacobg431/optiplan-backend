@@ -18,7 +18,7 @@ public class FileUtilities
         return new string(buffer);
     }
 
-    public static async Task<T> JsonFileReaderAsync<T>(string filePath)
+    public static async Task<T?> JsonFileReaderAsync<T>(string filePath)
     {
         if (!File.Exists(filePath))
         {

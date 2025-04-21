@@ -46,22 +46,25 @@ public class OptimizeByPartsTests
         string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
         string dependencySamplesPath = baseDirectory + "/DependencySamples.json";
 
-        WorkOrder[] workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        WorkOrder[]? workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
         _workOrderRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrders);
 
         //_output.WriteLine(workOrders.Count().ToString());
         
-        WorkOrderToDependency[] workOrdersToDependencies = await FileUtilities.JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities.JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
         _workOrderToDependencyRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
         
-        Dependency[] dependencies = await FileUtilities.JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Dependency[]? dependencies = await FileUtilities.JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
         _dependencyRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(dependencies);
 
         _optimizationServiceMock.SetupSequence(s => s.OptimizeByPartsAsync(workOrdersToDependencies)).ReturnsAsync(workOrders);
 
         ActionResult result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
-        //_output.WriteLine(((ObjectResult) result).StatusCode.ToString());
-        //_output.WriteLine(((ObjectResult) result).Value?.ToString());
+        _output.WriteLine(((ObjectResult) result).StatusCode.ToString());
+        _output.WriteLine(((ObjectResult) result).Value?.ToString());
 
         var createdResult = Assert.IsType<CreatedResult>(result);
         var optimizedData = Assert.IsAssignableFrom<IEnumerable<WorkOrder>>(createdResult.Value);
@@ -86,10 +89,12 @@ public class OptimizeByPartsTests
         string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
         string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
 
-        WorkOrder[] workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        WorkOrder[]? workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
         _workOrderRepositoryMock.SetupSequence(r => r.RetrieveAllAsync()).ReturnsAsync(workOrders);
 
-        WorkOrderToDependency[] workOrdersToDependencies = await FileUtilities.JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities.JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
         _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ThrowsAsync(new System.Exception("Database error"));
 
         var result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
