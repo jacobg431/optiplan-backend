@@ -54,7 +54,7 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(500)]
     public Task<ActionResult> OptimizeBySafety([FromBody] IEnumerable<WorkOrderToDependency> wList)
     {
-        return OptimizeAsync(wList, _optimizationService.OptimizeByCostsAsync);
+        return OptimizeAsync(wList, _optimizationService.OptimizeBySafetyAsync);
     }
 
     // Private methods
@@ -139,7 +139,6 @@ public class OptimizationController : ControllerBase
         }
 
         return StatusCode(201, value: workOrdersToReturn);
-
 
     }
 }
