@@ -54,13 +54,14 @@ This script will:
 ## 🛠️ Project Structure
 
 Optiplan/
-├── Optiplan.WebApi/        # Main Web API project
-├── Optiplan.UnitTests/     # Unit tests for the project
-├── OptiplanSqlite3.sql     # SQL script to initialize the SQLite database
-├── Optiplan.db             # SQLite database (created during setup)
-├── setup.sh                # Project setup script
-├── run.sh                  # Application run script
-└── README.md               # This file
+├── Optiplan.WebApi/            # Main Web API project  
+├── Optiplan.UnitTests/         # Unit test project for the solution  
+├── Optiplan.DatabaseResources/ # Database context and entity models for the solution
+├── OptiplanSqlite3.sql         # SQL script to initialize the SQLite database  
+├── Optiplan.db                 # SQLite database (created during setup)  
+├── setup.sh                    # Project setup script  
+├── run.sh                      # Application run script  
+└── README.md                   # This file  
 
 
 ## 📑 Notes
