@@ -53,7 +53,7 @@ This script will:
 
 ## 🛠️ Project Structure
 
-Optiplan/
+Optiplan/  
 ├── Optiplan.WebApi/            # Main Web API project  
 ├── Optiplan.UnitTests/         # Unit test project for the solution  
 ├── Optiplan.DatabaseResources/ # Database context and entity models for the solution  
