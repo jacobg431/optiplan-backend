@@ -3,21 +3,18 @@
       "id": 1,
       "name": "Valve Integrity Inspection",
       "startDateTime": "2024-04-29T10:00:00",
-      "stopDateTime": "2024-05-03T13:00:00",
-      "workOrderToDependencies": []
+      "stopDateTime": "2024-05-03T13:00:00"
     },
     {
       "id": 2,
       "name": "Crane Load Testing",
       "startDateTime": "2024-05-01T10:00:00",
-      "stopDateTime": "2024-05-03T14:00:00",
-      "workOrderToDependencies": []
+      "stopDateTime": "2024-05-03T14:00:00"
     },
     {
       "id": 3,
       "name": "Hydraulic System Maintenance",
       "startDateTime": "2024-05-02T11:00:00",
-      "stopDateTime": "2024-05-05T14:00:00",
-      "workOrderToDependencies": []
+      "stopDateTime": "2024-05-05T14:00:00"
     }
 ]

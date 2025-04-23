@@ -8,9 +8,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
     },
     {
         "dependencyInstanceId": 2,
@@ -21,9 +19,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
     },
     {
         "dependencyInstanceId": 3,
@@ -34,9 +30,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
     },
     {
         "dependencyInstanceId": 4,
@@ -47,9 +41,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
     },
     {
         "dependencyInstanceId": 100,
@@ -60,9 +52,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": "2024-04-29T08:00:00",
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 101,
@@ -73,9 +63,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": "2024-05-01T08:00:00",
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 102,
@@ -86,9 +74,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": "2024-05-02T08:00:00",
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 201,
@@ -99,9 +85,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": "2024-05-01T12:00:00",
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 202,
@@ -112,9 +96,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": "2024-05-02T12:00:00",
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       }, 
       {
         "dependencyInstanceId": 300,
@@ -125,9 +107,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": "2024-05-03T13:00:00",
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": "2024-05-03T13:00:00"
       },
       {
         "dependencyInstanceId": 301,
@@ -138,9 +118,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": "2024-05-03T14:00:00",
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": "2024-05-03T14:00:00"
       },
       {
         "dependencyInstanceId": 302,
@@ -151,9 +129,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": "2024-05-05T14:00:00",
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": "2024-05-05T14:00:00"
       },
       {
         "dependencyInstanceId": 400,
@@ -164,9 +140,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 401,
@@ -177,9 +151,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 402,
@@ -190,9 +162,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 500,
@@ -203,9 +173,7 @@
         "numberAttributeValue": 100,
         "booleanAttributeValue": 1,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 501,
@@ -216,9 +184,7 @@
         "numberAttributeValue": 2,
         "booleanAttributeValue": 0,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 600,
@@ -229,9 +195,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 601,
@@ -242,9 +206,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 602,
@@ -255,9 +217,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 700,
@@ -268,9 +228,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 701,
@@ -281,9 +239,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 702,
@@ -294,9 +250,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 800,
@@ -307,9 +261,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 801,
@@ -320,9 +272,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 802,
@@ -333,9 +283,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 900,
@@ -346,9 +294,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 901,
@@ -359,9 +305,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 902,
@@ -372,9 +316,7 @@
         "numberAttributeValue": null,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 1000,
@@ -385,9 +327,7 @@
         "numberAttributeValue": 25000,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 1001,
@@ -398,9 +338,7 @@
         "numberAttributeValue": 18000,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       },
       {
         "dependencyInstanceId": 1002,
@@ -411,8 +349,6 @@
         "numberAttributeValue": 20000,
         "booleanAttributeValue": null,
         "startDateTime": null,
-        "stopDateTime": null,
-        "dependency": null,
-        "workOrder": null
+        "stopDateTime": null
       }
 ]
