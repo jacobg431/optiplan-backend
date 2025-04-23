@@ -45,9 +45,11 @@ public class OptimizationService : IOptimizationService
             dateTimeStart = dateTimeStop?.AddHours(rndNum);
             dateTimeStop = dateTimeStop?.AddHours(rndNum);
 
+            string dtoName = dto.Name is null ? "" : dto.Name;
+
             workOrders.Add(new WorkOrder{
                 Id = dto.WorkOrderId,
-                Name = dto.Name,
+                Name = dtoName,
                 StartDateTime = dateTimeStart,
                 StopDateTime = dateTimeStop
             });
