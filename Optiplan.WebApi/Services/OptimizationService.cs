@@ -42,7 +42,7 @@ public class OptimizationService : IOptimizationService
             Random rnd = new Random();
             int rndNum = rnd.Next(-48, 48);
 
-            dateTimeStart = dateTimeStop?.AddHours(rndNum);
+            dateTimeStart = dateTimeStart?.AddHours(rndNum);
             dateTimeStop = dateTimeStop?.AddHours(rndNum);
 
             string dtoName = dto.Name is null ? "" : dto.Name;
