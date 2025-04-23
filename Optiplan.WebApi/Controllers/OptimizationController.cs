@@ -59,8 +59,9 @@ public class OptimizationController : ControllerBase
         return OptimizeAsync(dtoList, _optimizationService.OptimizeBySafetyAsync);
     }
 
+
     // Private methods
-    
+
     private async Task<ActionResult> DenormalizeData(IEnumerable<WorkOrderToDependency> wList)
     {
         if (wList == null || !wList.Any())
@@ -106,23 +107,23 @@ public class OptimizationController : ControllerBase
             d.Name
         });
 
-        //var res = resultFirstJoin.Join(dependencies, r => r.DependencyId, d => d.Id, (r, d) => new WorkOrderDependencyDto(
-        //    r.DependencyInstanceId,
-        //    r.WorkOrderId,
-        //    r.DependencyId,
-        //    r.WorkOrderStart,
-        //    r.WorkOrderStop,
-        //    r.TextAttributeValue,
-        //    r.IntegerAttributeValue,
-        //    r.NumberAttributeValue,
-        //    r.BooleanAttributeValue,
-        //    r.DependencyStart,
-        //    r.DependencyStop,
-        //    d.Name
-        //));
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = resultSecondJoin.Select(r => new CustomWorkOrderDependencyDto {
+            DependencyInstanceId = r.DependencyInstanceId,
+            WorkOrderId = r.WorkOrderId,
+            DependencyId = r.DependencyId,
+            WorkOrderStart = r.WorkOrderStart,
+            WorkOrderStop = r.WorkOrderStop,
+            TextAttributeValue = r.TextAttributeValue,
+            IntegerAttributeValue = r.IntegerAttributeValue,
+            NumberAttributeValue = r.NumberAttributeValue,
+            BooleanAttributeValue = r.BooleanAttributeValue,
+            DependencyStart = r.DependencyStart,
+            DependencyStop = r.DependencyStop,
+            Name = r.Name
+        });
 
         return Ok(new {
-            Data = resultSecondJoin, 
+            Data = dtoList, 
             ExpectedCount = expectedNumberOfWorkOrders
         });
 
@@ -130,7 +131,7 @@ public class OptimizationController : ControllerBase
 
     private async Task<ActionResult> OptimizeAsync(
         IEnumerable<WorkOrderToDependencyDto> dtoList,
-        Func<object, Task<WorkOrder[]>> optimizationMethod
+        Func<IEnumerable<CustomWorkOrderDependencyDto>, Task<WorkOrder[]>> optimizationMethod
     )
     {
         IEnumerable<WorkOrderToDependency> wList = dtoList.Select(WorkOrderToDependencyMapper.ToEntity);
@@ -142,10 +143,10 @@ public class OptimizationController : ControllerBase
         }
 
         var resultValue = ((dynamic)(OkObjectResult)denormalizedResult).Value;
-        var resultSecondJoin = resultValue.Data;
+        IEnumerable<CustomWorkOrderDependencyDto> resultDtoList = resultValue.Data;
         int expectedCount = resultValue.ExpectedCount;
 
-        IEnumerable<WorkOrder> workOrdersToReturn = await optimizationMethod(resultSecondJoin);
+        IEnumerable<WorkOrder> workOrdersToReturn = await optimizationMethod(resultDtoList);
         if (!workOrdersToReturn.Any())
         {
             return StatusCode(500, "Error optimizing work orders");

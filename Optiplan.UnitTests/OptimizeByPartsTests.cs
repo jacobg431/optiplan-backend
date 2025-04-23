@@ -50,14 +50,14 @@ public class OptimizeByPartsTests
         Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
         _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
 
-        _optimizationServiceMock.Setup(s => s.OptimizeByPartsAsync(It.IsAny<object>())).ReturnsAsync(workOrders);
+        _optimizationServiceMock.Setup(s => s.OptimizeByPartsAsync(It.IsAny<IEnumerable<CustomWorkOrderDependencyDto>>())).ReturnsAsync(workOrders);
 
         // Action
         IEnumerable<WorkOrderToDependencyDto> dtoList = workOrdersToDependencies.Select(WorkOrderToDependencyMapper.ToDto);
         ActionResult result = await _optimizationController.OptimizeByParts(dtoList);
 
         // Method invocation verification
-        _optimizationServiceMock.Verify(s => s.OptimizeByPartsAsync(It.IsAny<object>()), Times.Once());
+        _optimizationServiceMock.Verify(s => s.OptimizeByPartsAsync(It.IsAny<IEnumerable<CustomWorkOrderDependencyDto>>()), Times.Once());
 
         // Assertions
         var statusResult = Assert.IsType<ObjectResult>(result);
