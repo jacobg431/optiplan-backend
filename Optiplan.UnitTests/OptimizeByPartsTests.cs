@@ -5,6 +5,7 @@ using Optiplan.WebApi.Controllers;
 using Optiplan.WebApi.Repositories;
 using Optiplan.WebApi.Services;
 using Optiplan.WebApi.Utilities;
+using Optiplan.WebApi.DataTransferObjects;
 
 namespace Optiplan.UnitTests;
 
@@ -52,7 +53,8 @@ public class OptimizeByPartsTests
         _optimizationServiceMock.Setup(s => s.OptimizeByPartsAsync(It.IsAny<object>())).ReturnsAsync(workOrders);
 
         // Action
-        ActionResult result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
+        IEnumerable<WorkOrderToDependencyDto> dtoList = workOrdersToDependencies.Select(WorkOrderToDependencyMapper.ToDto);
+        ActionResult result = await _optimizationController.OptimizeByParts(dtoList);
 
         // Method invocation verification
         _optimizationServiceMock.Verify(s => s.OptimizeByPartsAsync(It.IsAny<object>()), Times.Once());
@@ -70,7 +72,8 @@ public class OptimizeByPartsTests
         WorkOrderToDependency[] workOrdersToDependencies = [];
         _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
 
-        var result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
+        IEnumerable<WorkOrderToDependencyDto> dtoList = workOrdersToDependencies.Select(WorkOrderToDependencyMapper.ToDto);
+        var result = await _optimizationController.OptimizeByParts(dtoList);
 
         Assert.IsType<BadRequestObjectResult>(result);
     }
@@ -90,7 +93,8 @@ public class OptimizeByPartsTests
         Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
         _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ThrowsAsync(new System.Exception("Database error"));
 
-        var result = await _optimizationController.OptimizeByParts(workOrdersToDependencies);
+        IEnumerable<WorkOrderToDependencyDto> dtoList = workOrdersToDependencies.Select(WorkOrderToDependencyMapper.ToDto);
+        var result = await _optimizationController.OptimizeByParts(dtoList);
 
         var statusResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(500, statusResult.StatusCode);

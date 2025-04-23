@@ -3,6 +3,7 @@ using Optiplan.DatabaseResources;
 using Optiplan.WebApi.Repositories;
 using Optiplan.WebApi.Services;
 using Optiplan.WebApi.DataTransferObjects;
+using System.Diagnostics;
 
 namespace Optiplan.WebApi.Controllers;
 
@@ -33,9 +34,9 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(201, Type = typeof(IEnumerable<WorkOrder>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public Task<ActionResult> OptimizeByParts([FromBody] IEnumerable<WorkOrderToDependency> wList)
+    public Task<ActionResult> OptimizeByParts([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(wList, _optimizationService.OptimizeByPartsAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeByPartsAsync);
     }
 
     // POST: api/optimization/costs
@@ -43,9 +44,9 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(201, Type = typeof(IEnumerable<WorkOrder>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public Task<ActionResult> OptimizeByCosts([FromBody] IEnumerable<WorkOrderToDependency> wList)
+    public Task<ActionResult> OptimizeByCosts([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(wList, _optimizationService.OptimizeByCostsAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeByCostsAsync);
     }
 
     // POST: api/optimization/safety
@@ -53,9 +54,9 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(201, Type = typeof(IEnumerable<WorkOrder>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public Task<ActionResult> OptimizeBySafety([FromBody] IEnumerable<WorkOrderToDependency> wList)
+    public Task<ActionResult> OptimizeBySafety([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(wList, _optimizationService.OptimizeBySafetyAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeBySafetyAsync);
     }
 
     // Private methods
@@ -128,10 +129,12 @@ public class OptimizationController : ControllerBase
     }
 
     private async Task<ActionResult> OptimizeAsync(
-        IEnumerable<WorkOrderToDependency> wList,
+        IEnumerable<WorkOrderToDependencyDto> dtoList,
         Func<object, Task<WorkOrder[]>> optimizationMethod
     )
     {
+        IEnumerable<WorkOrderToDependency> wList = dtoList.Select(WorkOrderToDependencyMapper.ToEntity);
+
         var denormalizedResult = await DenormalizeData(wList);
         if (denormalizedResult is not OkObjectResult)
         {
