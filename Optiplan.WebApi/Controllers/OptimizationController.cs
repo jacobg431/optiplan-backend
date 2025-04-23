@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Optiplan.DatabaseResources;
 using Optiplan.WebApi.Repositories;
 using Optiplan.WebApi.Services;
+using Optiplan.WebApi.DataTransferObjects;
 
 namespace Optiplan.WebApi.Controllers;
 
@@ -103,6 +104,21 @@ public class OptimizationController : ControllerBase
             r.DependencyStop,
             d.Name
         });
+
+        //var res = resultFirstJoin.Join(dependencies, r => r.DependencyId, d => d.Id, (r, d) => new WorkOrderDependencyDto(
+        //    r.DependencyInstanceId,
+        //    r.WorkOrderId,
+        //    r.DependencyId,
+        //    r.WorkOrderStart,
+        //    r.WorkOrderStop,
+        //    r.TextAttributeValue,
+        //    r.IntegerAttributeValue,
+        //    r.NumberAttributeValue,
+        //    r.BooleanAttributeValue,
+        //    r.DependencyStart,
+        //    r.DependencyStop,
+        //    d.Name
+        //));
 
         return Ok(new {
             Data = resultSecondJoin, 
