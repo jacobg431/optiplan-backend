@@ -13,6 +13,7 @@
 .env
 
 # Logs
+**/Logs
 *.log
 
 # Database

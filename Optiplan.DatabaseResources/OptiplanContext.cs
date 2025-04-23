@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Optiplan.DatabaseResources;
 
@@ -10,8 +8,7 @@ public partial class OptiplanContext : DbContext
     {
     }
 
-    public OptiplanContext(DbContextOptions<OptiplanContext> options)
-        : base(options)
+    public OptiplanContext(DbContextOptions<OptiplanContext> options) : base(options)
     {
     }
 
@@ -22,35 +19,6 @@ public partial class OptiplanContext : DbContext
     public virtual DbSet<WorkOrder> WorkOrders { get; set; }
 
     public virtual DbSet<WorkOrderToDependency> WorkOrderToDependencies { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        string database = "Optiplan.db";
-        string relativePath = "..";
-        string currentDir = Environment.CurrentDirectory;
-        string path = string.Empty;
-
-        if (currentDir.EndsWith("net8.0"))
-        {
-            path = Path.Combine(relativePath, relativePath, relativePath, relativePath, database);
-        }
-        else
-        {
-            path = Path.Combine(relativePath, database);
-        }
-
-        path = Path.GetFullPath(path);
-        OptiplanContextLogger.WriteLine($"Database path: {path}");
-        if (!File.Exists(path))
-        {
-            // Important to throw, otherwise database provider will create empty db file
-            throw new FileNotFoundException(message: $"{path} not found.", fileName: path);
-        }
-        optionsBuilder.UseSqlite($"Data Source={path}");
-        optionsBuilder.LogTo(OptiplanContextLogger.WriteLine, 
-            [Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.CommandExecuting]
-        );
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -9,13 +9,13 @@ public static class OptiplanContextExtensions
     // This will register the class as a service that can be utilized throughout the app via dependency injection
     public static IServiceCollection AddOptiplanContext(
         this IServiceCollection services,
-        string relativePath = "..",
         string database = "Optiplan.db"
     )
     {
-        string path = Path.Combine(relativePath, database);
+        string path = ResolveFilePath(database);
         path = Path.GetFullPath(path);
         OptiplanContextLogger.WriteLine($"Database path: {path}");
+
         if (!File.Exists(path))
         {
             // Important to throw, otherwise database provider will create empty db file
@@ -33,5 +33,15 @@ public static class OptiplanContextExtensions
         );
 
         return services;
+    }
+
+    public static string ResolveFilePath(string filePath)
+    {
+        string relativePath = "..";
+        if (Environment.CurrentDirectory.EndsWith("net8.0"))
+        {
+            return Path.Combine(relativePath, relativePath, relativePath, relativePath, filePath);
+        }
+        return Path.Combine(relativePath, filePath);
     }
 }

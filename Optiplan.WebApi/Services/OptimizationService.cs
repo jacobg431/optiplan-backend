@@ -1,5 +1,7 @@
 using Optiplan.WebApi.Repositories;
 using Optiplan.DatabaseResources;
+using Optiplan.WebApi.DataTransferObjects;
+using Microsoft.AspNetCore.Components.RenderTree;
 
 namespace Optiplan.WebApi.Services;
 
@@ -13,17 +15,49 @@ public class OptimizationService : IOptimizationService
     }
 
     
-    public async Task<WorkOrder[]> OptimizeByPartsAsync(object denormalizedWorkOrderDependencyObject)
+    public async Task<WorkOrder[]> OptimizeByPartsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        return await _workOrderRepository.RetrieveAllAsync(); // Placeholder for now ...
+        return await Task.Run(() => DateTimeRandomizer(dtoList)); // Placeholder for now ...
     }
-    public async Task<WorkOrder[]> OptimizeByCostsAsync(object denormalizedWorkOrderDependencyObject)
+    public async Task<WorkOrder[]> OptimizeByCostsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
         return await _workOrderRepository.RetrieveAllAsync();
     }
-    public async Task<WorkOrder[]> OptimizeBySafetyAsync(object denormalizedWorkOrderDependencyObject)
+    public async Task<WorkOrder[]> OptimizeBySafetyAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
         return await _workOrderRepository.RetrieveAllAsync();
+    }
+
+    private WorkOrder[] DateTimeRandomizer(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
+    {
+
+        IEnumerable<CustomWorkOrderDependencyDto> distinctByWorkOrderList = dtoList.DistinctBy(dto => dto.WorkOrderId);
+        List<WorkOrder> workOrders = new List<WorkOrder>();
+
+        foreach(CustomWorkOrderDependencyDto dto in distinctByWorkOrderList)
+        {
+            DateTime? dateTimeStart = dto.WorkOrderStart;
+            DateTime? dateTimeStop = dto.WorkOrderStop;
+
+            Random rnd = new Random();
+            int rndNum = rnd.Next(-48, 48);
+
+            dateTimeStart = dateTimeStart?.AddHours(rndNum);
+            dateTimeStop = dateTimeStop?.AddHours(rndNum);
+
+            string dtoName = dto.Name is null ? "" : dto.Name;
+
+            workOrders.Add(new WorkOrder{
+                Id = dto.WorkOrderId,
+                Name = dtoName,
+                StartDateTime = dateTimeStart,
+                StopDateTime = dateTimeStop
+            });
+
+        }
+
+        return workOrders.ToArray();
+
     }
 
 }

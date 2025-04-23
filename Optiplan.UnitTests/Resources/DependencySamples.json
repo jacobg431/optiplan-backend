@@ -9,8 +9,7 @@
         "integerAttributeLabel": "Work order ID",
         "numberAttributeLabel": null,
         "booleanAttributeLabel": "Has finished",
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 2,
@@ -22,8 +21,7 @@
         "integerAttributeLabel": null,
         "numberAttributeLabel": null,
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 3,
@@ -35,8 +33,7 @@
         "integerAttributeLabel": null,
         "numberAttributeLabel": null,
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 4,
@@ -48,8 +45,7 @@
         "integerAttributeLabel": null,
         "numberAttributeLabel": null,
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 5,
@@ -61,8 +57,7 @@
         "integerAttributeLabel": "Amount",
         "numberAttributeLabel": null,
         "booleanAttributeLabel": "External",
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 6,
@@ -74,8 +69,7 @@
         "integerAttributeLabel": null,
         "numberAttributeLabel": "Amount",
         "booleanAttributeLabel": "In storage",
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 7,
@@ -87,8 +81,7 @@
         "integerAttributeLabel": null,
         "numberAttributeLabel": null,
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 8,
@@ -100,8 +93,7 @@
         "integerAttributeLabel": null,
         "numberAttributeLabel": null,
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 9,
@@ -113,8 +105,7 @@
         "integerAttributeLabel": "Criticality",
         "numberAttributeLabel": null,
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 10,
@@ -126,8 +117,7 @@
         "integerAttributeLabel": "Severity",
         "numberAttributeLabel": null,
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     },
     {
         "id": 11,
@@ -139,7 +129,6 @@
         "integerAttributeLabel": null,
         "numberAttributeLabel": "Estimated calculatory costs",
         "booleanAttributeLabel": null,
-        "category": null,
-        "workOrderToDependencies": []
+        "category": null
     }
 ]
