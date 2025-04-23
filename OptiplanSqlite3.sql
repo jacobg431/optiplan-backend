@@ -150,17 +150,17 @@ INSERT INTO WorkOrder (Id, Name, StartDateTime, StopDateTime) VALUES
 (1, 'Valve Integrity Inspection', '2025-04-22 10:00:00', '2025-04-26 13:00:00'),
 (2, 'Crane Load Testing', '2025-04-23 10:00:00', '2025-04-26 14:00:00'),
 (3, 'Hydraulic System Maintenance', '2025-04-24 11:00:00', '2025-04-27 14:00:00'),
-(4, 'Fire Suppression Drill', '2025-04-25 09:00:00', '2025-04-27 13:00:00'),
+(4, 'Fire Suppression Drill', '2025-04-25 09:00:00', '2025-04-28 13:00:00'),
 (5, 'Drilling Rig Calibration', '2025-04-23 11:00:00', '2025-04-26 15:00:00'),
 (6, 'Subsea Pipeline Check', '2025-04-22 11:00:00', '2025-04-26 13:00:00'),
-(7, 'Electrical Panel Audit', '2025-04-24 11:00:00', '2025-04-27 13:00:00'),
+(7, 'Electrical Panel Audit', '2025-04-24 11:00:00', '2025-04-29 13:00:00'),
 (8, 'Emergency Power System Test', '2025-04-21 10:00:00', '2025-04-24 15:00:00'),
 (9, 'Helideck Surface Inspection', '2025-04-26 10:00:00', '2025-04-27 14:00:00'),
 (10, 'Flare Stack Thermography', '2025-04-22 09:00:00', '2025-04-25 16:00:00'),
 
 (11, 'Anchor Chain Re-tensioning', '2025-04-21 09:00:00', '2025-04-22 13:00:00'),
 (12, 'Diving Bell Safety Inspection', '2025-04-23 09:00:00', '2025-04-26 16:00:00'),
-(13, 'Mooring System Review', '2025-04-24 10:00:00', '2025-04-27 16:00:00'),
+(13, 'Mooring System Review', '2025-04-24 10:00:00', '2025-04-30 16:00:00'),
 (14, 'Gas Detection System Calibration', '2025-04-22 08:00:00', '2025-04-26 16:00:00'),
 (15, 'Pump Room Ventilation Check', '2025-04-23 09:00:00', '2025-04-26 14:00:00'),
 (16, 'Cathodic Protection Survey', '2025-04-21 08:00:00', '2025-04-25 13:00:00'),
@@ -176,7 +176,7 @@ INSERT INTO WorkOrder (Id, Name, StartDateTime, StopDateTime) VALUES
 (25, 'High Pressure Line Flushing', '2025-04-23 11:00:00', '2025-04-26 16:00:00'),
 (26, 'Diesel Generator Load Test', '2025-04-21 09:00:00', '2025-04-25 15:00:00'),
 (27, 'Platform Structural Survey', '2025-04-26 10:00:00', '2025-04-27 16:00:00'),
-(28, 'CCTV Monitoring System Check', '2025-04-25 10:00:00', '2025-04-27 15:00:00');
+(28, 'CCTV Monitoring System Check', '2025-04-25 10:00:00', '2025-04-29 15:00:00');
 
 -- -----------------------------------------------------
 -- INSERT INTO Table `WorkOrderToDependency`
