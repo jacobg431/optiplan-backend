@@ -76,6 +76,7 @@ public class OptimizationController : ControllerBase
             wotd.DependencyInstanceId,
             wotd.WorkOrderId,
             wotd.DependencyId,
+            WorkOrderName = wo.Name,
             WorkOrderStart = wo.StartDateTime,
             WorkOrderStop = wo.StopDateTime,
             wotd.TextAttributeValue,
@@ -96,6 +97,7 @@ public class OptimizationController : ControllerBase
             r.DependencyInstanceId,
             r.WorkOrderId,
             r.DependencyId,
+            r.WorkOrderName,
             r.WorkOrderStart,
             r.WorkOrderStop,
             r.TextAttributeValue,
@@ -104,13 +106,14 @@ public class OptimizationController : ControllerBase
             r.BooleanAttributeValue,
             r.DependencyStart,
             r.DependencyStop,
-            d.Name
+            DependencyName = d.Name
         });
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = resultSecondJoin.Select(r => new CustomWorkOrderDependencyDto {
             DependencyInstanceId = r.DependencyInstanceId,
             WorkOrderId = r.WorkOrderId,
             DependencyId = r.DependencyId,
+            WorkOrderName = r.WorkOrderName,
             WorkOrderStart = r.WorkOrderStart,
             WorkOrderStop = r.WorkOrderStop,
             TextAttributeValue = r.TextAttributeValue,
@@ -119,7 +122,7 @@ public class OptimizationController : ControllerBase
             BooleanAttributeValue = r.BooleanAttributeValue,
             DependencyStart = r.DependencyStart,
             DependencyStop = r.DependencyStop,
-            Name = r.Name
+            DependencyName = r.DependencyName
         });
 
         return Ok(new {

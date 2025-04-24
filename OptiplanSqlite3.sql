@@ -97,20 +97,20 @@ INSERT INTO Dependency (
     NumberAttributeLabel, BooleanAttributeLabel
 ) VALUES
 (
-    1, 'Other work orders', 
+    1, 'Other Work Orders', 
     'Specify other work orders this work order depends on, and whether those work orders must have started or finished before this work order can start.',
     3, 1, NULL, 'Work order ID', NULL, 'Has finished'
 ),
 (
-    2, 'Work order Start (Earliest)', 'The earliest date and time the work order can begin.',
+    2, 'Work Order Start (Earliest)', 'The earliest date and time the work order can begin.',
     3, 0, NULL, NULL, NULL, NULL
 ),
 (
-    3, 'Work order Start (Latest)', 'The latest date and time the work order can begin.',
+    3, 'Work Order Start (Latest)', 'The latest date and time the work order can begin.',
     3, 0, NULL, NULL, NULL, NULL
 ),
 (
-    4, 'Work order Deadline', 'The latest date and time the work order must be concluded.',
+    4, 'Work Order Deadline', 'The latest date and time the work order must be concluded.',
     3, 0, NULL, NULL, NULL, NULL
 ),
 (
