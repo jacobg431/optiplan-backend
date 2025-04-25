@@ -6,9 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Optiplan.WebApi.Services;
 
 public class OptimizationService : IOptimizationService
-{
-    private static Queue<CustomWorkOrderDependencyDto> _dtoFifoQueue = new Queue<CustomWorkOrderDependencyDto>();
-    
+{    
     public async Task<WorkOrder[]> OptimizeByPartsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
         return await Task.Run(() => OptimizeByParts(dtoList));
@@ -24,23 +22,53 @@ public class OptimizationService : IOptimizationService
 
     private WorkOrder[] OptimizeByParts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
+        // Sort all work orders by criticality in descending order
         IEnumerable<CustomWorkOrderDependencyDto> criticalitySortedSubset = dtoList
             .Where(dto => dto.DependencyName == "Criticality")
             .OrderByDescending(dto => dto.IntegerAttributeValue);
         IEnumerable<WorkOrder> criticalitySortedWorkOrders = criticalitySortedSubset
             .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
 
+        // Extract work orders that have available parts
         IEnumerable<CustomWorkOrderDependencyDto> partsAvailableSubset = dtoList
             .Where(dto => dto.DependencyName == "Materials and parts" && dto.BooleanAttributeValue != 0)
             .DistinctBy(dto => dto.WorkOrderId);
         IEnumerable<WorkOrder> partsAvailableWorkOrders = partsAvailableSubset
             .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
 
-        // The following list should be sorted by criticality
+        // Make sure work order with available parts are sorted by criticality
         IEnumerable<WorkOrder> workOrdersToOptimize = criticalitySortedWorkOrders
             .IntersectBy(partsAvailableWorkOrders
             .Select(p => p.Id), c => c.Id);
 
+        //IEnumerable<WorkOrder> unresolvableWorkOrders = new List<WorkOrder>();
+
+        IEnumerable<WorkOrder> workOrders = OptimizeWorkOrders(dtoList, workOrdersToOptimize);
+
+        // Extract work orders that don't have available parts
+        IEnumerable<CustomWorkOrderDependencyDto> partsNotAvailableSubset = dtoList
+            .Where(dto => dto.DependencyName == "Materials and parts" && dto.BooleanAttributeValue == 0)
+            .DistinctBy(dto => dto.WorkOrderId);
+        IEnumerable<WorkOrder> partsNotAvailableWorkOrders = partsAvailableSubset
+            .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
+
+        // Make sure work order without available parts are sorted by criticality
+        workOrdersToOptimize = criticalitySortedWorkOrders
+            .IntersectBy(partsNotAvailableWorkOrders
+            .Select(p => p.Id), c => c.Id);
+
+        // Concatinate work orders
+        workOrders = workOrders.Union(OptimizeWorkOrders(dtoList, workOrdersToOptimize));
+
+        //return workOrders.Union(unresolvableWorkOrders).ToArray();
+        return workOrders.ToArray();
+    }
+
+    private static IEnumerable<WorkOrder> OptimizeWorkOrders(
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList,
+        IEnumerable<WorkOrder> workOrdersToOptimize
+    )
+    {
         Dictionary<int, DateTime?> earliestStarts = ToDateTimeDictionary(
             dtoList, 
             workOrdersToOptimize, 
@@ -60,10 +88,15 @@ public class OptimizationService : IOptimizationService
             false
         );
 
-        IEnumerable<WorkOrder> workOrders = new List<WorkOrder>();
-        workOrders = SetStartStopDateTimes(workOrdersToOptimize, earliestStarts, latestStarts, deadlines);
+        IEnumerable<WorkOrder> workOrders = SetStartStopDateTimes(
+            workOrdersToOptimize, 
+            earliestStarts, 
+            latestStarts, 
+            deadlines,
+            dtoList
+        );
 
-        return workOrders.ToArray();
+        return workOrders;
     }
 
     private static Dictionary<int, DateTime?> ToDateTimeDictionary(
@@ -75,13 +108,11 @@ public class OptimizationService : IOptimizationService
     {
         IEnumerable<CustomWorkOrderDependencyDto> tempDtoList = dtoList
             .Where(dto => dto.DependencyName == dependencyName)
-            .IntersectBy(workOrders.Select(w => w.Id), e => e.WorkOrderId);
+            .IntersectBy(workOrders.Select(w => w.Id), e => e.WorkOrderId)
+            .DistinctBy(dto => dto.WorkOrderId);
 
-        if (start)
-        {
-            return tempDtoList.ToDictionary(dto => dto.WorkOrderId, dto => dto.DependencyStart);
-        }
-        return tempDtoList.ToDictionary(dto => dto.WorkOrderId, dto => dto.DependencyStop);
+            return tempDtoList
+                .ToDictionary(dto => dto.WorkOrderId, dto => start? dto.DependencyStart : dto.DependencyStop);
     }
 
     private static IEnumerable<WorkOrder> SetStartStopDateTimes(
@@ -89,7 +120,7 @@ public class OptimizationService : IOptimizationService
         Dictionary<int, DateTime?> earliestStartDateTimes,
         Dictionary<int, DateTime?> latestStartDateTimes,
         Dictionary<int, DateTime?> deadlineDateTimes,
-        bool checkOtherWorkOrders = false
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList
     )
     {
         int expectedCount = workOrdersToOptimize.Count();
@@ -103,6 +134,26 @@ public class OptimizationService : IOptimizationService
         }
 
         List<WorkOrder> workOrders = new List<WorkOrder>();
+        
+        IEnumerable<CustomWorkOrderDependencyDto> dependentDtoList = dtoList
+            .Where(dto => dto.DependencyName == "Other Work Orders" && dto.IntegerAttributeValue > 0)
+            .IntersectBy(workOrdersToOptimize.Select(w => w.Id), dto => dto.WorkOrderId);
+        IEnumerable<WorkOrder> dependentWorkOrders = dependentDtoList
+            .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
+        IEnumerable<int> dependentIds = dependentDtoList.Select(dto => dto.WorkOrderId).Distinct();
+
+        // 1) Get the set of target work-order IDs that others depend on:
+        IEnumerable<int> targetIds = dtoList
+            .Where(dto => dto.DependencyName == "Other Work Orders"
+                    && dto.IntegerAttributeValue > 0
+                    // optional: only consider dependencies coming from workOrdersToOptimize
+                    && workOrdersToOptimize.Select(w => w.Id).Contains(dto.WorkOrderId))
+            .Select(dto => dto.IntegerAttributeValue!.Value)
+            .Distinct();
+
+        // 2) Filter your scheduled set to only those targets:
+        IEnumerable<WorkOrder> workOrdersOtherAreDependentOn = workOrdersToOptimize
+            .Where(w => targetIds.Contains(w.Id));
 
         foreach(WorkOrder w in workOrdersToOptimize)
         {
@@ -121,14 +172,44 @@ public class OptimizationService : IOptimizationService
 
             TimeSpan diffDateTime = (TimeSpan)(w.StopDateTime - w.StartDateTime);
             DateTime? earliestStart = earliestStartDateTimes[w.Id];
-            
-            if (checkOtherWorkOrders)
-            {
-                throw new NotImplementedException();
-            }
-
             DateTime? latestStart = latestStartDateTimes[w.Id];
             DateTime? deadline = deadlineDateTimes[w.Id];
+
+            // If work order dependent on work order not yet optimized, place in list
+            //if (targetIds.Contains())
+
+            // If this work order has any other work order dependencies, get the start and stop times of these
+            if (dependentIds.Contains(w.Id))
+            {
+
+                IEnumerable<CustomWorkOrderDependencyDto> targets = dependentDtoList
+                    .Where(dto => dto.WorkOrderId == w.Id);
+
+                DateTime? earliestPossibleStart = earliestStart;
+
+                foreach(CustomWorkOrderDependencyDto target in targets)
+                {
+                    byte hasFinished = dependentDtoList
+                        .Where(dto => dto.IntegerAttributeValue == target.WorkOrderId)
+                        .Select(dto => dto.BooleanAttributeValue!.Value)
+                        .FirstOrDefault();
+
+                    // Work order is dependent on other work to have started
+                    if (hasFinished == 0)
+                    {
+                        DateTime? targetStart = target.WorkOrderStart;
+                        earliestPossibleStart = targetStart > earliestPossibleStart ? targetStart : earliestPossibleStart;
+                        continue;
+                    }
+
+                    // Work order is dependent on other work order to have stopped
+                    DateTime? targetStop = target.WorkOrderStop;
+                    earliestPossibleStart = targetStop > earliestPossibleStart ? targetStop : earliestPossibleStart;
+                }
+                
+                earliestStart = earliestPossibleStart > earliestStart ? earliestPossibleStart : earliestStart;
+            }
+
             if (earliestStart > latestStart || earliestStart > deadline)
             {
                 workOrders.Add(new WorkOrder{
