@@ -7,14 +7,7 @@ namespace Optiplan.WebApi.Services;
 
 public class OptimizationService : IOptimizationService
 {
-    private readonly IWorkOrderRepository _workOrderRepository;
     private static Queue<CustomWorkOrderDependencyDto> _dtoFifoQueue = new Queue<CustomWorkOrderDependencyDto>();
-
-    public OptimizationService(IWorkOrderRepository workOrderRepository)
-    {
-        _workOrderRepository = workOrderRepository;
-    }
-
     
     public async Task<WorkOrder[]> OptimizeByPartsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
@@ -31,22 +24,22 @@ public class OptimizationService : IOptimizationService
 
     private WorkOrder[] OptimizeByParts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        IEnumerable<CustomWorkOrderDependencyDto> criticalitySortedSubset = dtoList.Where(
-            dto => dto.DependencyName == "Criticality"
-        ).OrderByDescending(dto => dto.IntegerAttributeValue);
-        IEnumerable<WorkOrder> criticalitySortedWorkOrders = criticalitySortedSubset.Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
+        IEnumerable<CustomWorkOrderDependencyDto> criticalitySortedSubset = dtoList
+            .Where(dto => dto.DependencyName == "Criticality")
+            .OrderByDescending(dto => dto.IntegerAttributeValue);
+        IEnumerable<WorkOrder> criticalitySortedWorkOrders = criticalitySortedSubset
+            .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
 
-        IEnumerable<CustomWorkOrderDependencyDto> partsAvailableSubset = dtoList.Where(
-            dto => dto.DependencyName == "Materials and parts" && 
-            dto.BooleanAttributeValue != 0
-        ).DistinctBy(dto => dto.WorkOrderId);
-        IEnumerable<WorkOrder> partsAvailableWorkOrders = partsAvailableSubset.Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
+        IEnumerable<CustomWorkOrderDependencyDto> partsAvailableSubset = dtoList
+            .Where(dto => dto.DependencyName == "Materials and parts" && dto.BooleanAttributeValue != 0)
+            .DistinctBy(dto => dto.WorkOrderId);
+        IEnumerable<WorkOrder> partsAvailableWorkOrders = partsAvailableSubset
+            .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
 
         // The following list should be sorted by criticality
-        IEnumerable<WorkOrder> workOrdersToOptimize = criticalitySortedWorkOrders.IntersectBy(
-            partsAvailableWorkOrders.Select(p => p.Id), 
-            c => c.Id
-        );
+        IEnumerable<WorkOrder> workOrdersToOptimize = criticalitySortedWorkOrders
+            .IntersectBy(partsAvailableWorkOrders
+            .Select(p => p.Id), c => c.Id);
 
         Dictionary<int, DateTime?> earliestStarts = ToDateTimeDictionary(
             dtoList, 
@@ -80,13 +73,10 @@ public class OptimizationService : IOptimizationService
         bool start = true
     )
     {
-        IEnumerable<CustomWorkOrderDependencyDto> tempDtoList = dtoList.Where(
-            dto => dto.DependencyName == dependencyName
-        ).IntersectBy(
-            workOrders.Select(w => w.Id),
-            e => e.WorkOrderId
-        );
-        
+        IEnumerable<CustomWorkOrderDependencyDto> tempDtoList = dtoList
+            .Where(dto => dto.DependencyName == dependencyName)
+            .IntersectBy(workOrders.Select(w => w.Id), e => e.WorkOrderId);
+
         if (start)
         {
             return tempDtoList.ToDictionary(dto => dto.WorkOrderId, dto => dto.DependencyStart);
