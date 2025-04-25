@@ -18,15 +18,15 @@ public class OptimizationService : IOptimizationService
     
     public async Task<WorkOrder[]> OptimizeByPartsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        return await Task.Run(() => OptimizeByParts(dtoList)); // Placeholder for now ...
+        return await Task.Run(() => OptimizeByParts(dtoList));
     }
     public async Task<WorkOrder[]> OptimizeByCostsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        return await _workOrderRepository.RetrieveAllAsync();
+        return await Task.Run(() => DateTimeRandomizer(dtoList)); // Placeholder for now
     }
     public async Task<WorkOrder[]> OptimizeBySafetyAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        return await _workOrderRepository.RetrieveAllAsync();
+        return await Task.Run(() => DateTimeRandomizer(dtoList)); // Placeholder for now
     }
 
     private WorkOrder[] OptimizeByParts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
@@ -39,7 +39,7 @@ public class OptimizationService : IOptimizationService
         IEnumerable<CustomWorkOrderDependencyDto> partsAvailableSubset = dtoList.Where(
             dto => dto.DependencyName == "Materials and parts" && 
             dto.BooleanAttributeValue != 0
-        ).DistinctBy(dto => dto.DependencyId);
+        ).DistinctBy(dto => dto.WorkOrderId);
         IEnumerable<WorkOrder> partsAvailableWorkOrders = partsAvailableSubset.Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
 
         // The following list should be sorted by criticality
@@ -48,68 +48,57 @@ public class OptimizationService : IOptimizationService
             c => c.Id
         );
 
-        IEnumerable<CustomWorkOrderDependencyDto> earliestStarts = IntersectDependencyByWorkOrder(
+        Dictionary<int, DateTime?> earliestStarts = ToDateTimeDictionary(
             dtoList, 
             workOrdersToOptimize, 
             "Work Order Start (Earliest)"
         );
-        Queue<DateTime?> earliestStartDateTimes = GetDateTimes(earliestStarts);
 
-        IEnumerable<CustomWorkOrderDependencyDto> latestStarts = IntersectDependencyByWorkOrder(
+        Dictionary<int, DateTime?> latestStarts = ToDateTimeDictionary(
             dtoList, 
             workOrdersToOptimize, 
-            "Work Order Start (Earliest)"
+            "Work Order Start (Latest)"
         );
-        Queue<DateTime?> latestStartDateTimes = GetDateTimes(latestStarts);
 
-        IEnumerable<CustomWorkOrderDependencyDto> deadlines = IntersectDependencyByWorkOrder(
+        Dictionary<int, DateTime?> deadlines = ToDateTimeDictionary(
             dtoList, 
             workOrdersToOptimize, 
-            "Work Order Deadline"
+            "Work Order Deadline",
+            false
         );
-        Queue<DateTime?> deadlineDateTimes = GetDateTimes(deadlines, false);
 
         IEnumerable<WorkOrder> workOrders = new List<WorkOrder>();
-        workOrders = SetStartStopDateTimes(workOrdersToOptimize, earliestStartDateTimes, latestStartDateTimes, deadlineDateTimes);
+        workOrders = SetStartStopDateTimes(workOrdersToOptimize, earliestStarts, latestStarts, deadlines);
 
         return workOrders.ToArray();
     }
 
-    private static IEnumerable<CustomWorkOrderDependencyDto> IntersectDependencyByWorkOrder(
+    private static Dictionary<int, DateTime?> ToDateTimeDictionary(
         IEnumerable<CustomWorkOrderDependencyDto> dtoList,
         IEnumerable<WorkOrder> workOrders,
-        string dependencyName
+        string dependencyName,
+        bool start = true
     )
     {
-        return dtoList.Where(
+        IEnumerable<CustomWorkOrderDependencyDto> tempDtoList = dtoList.Where(
             dto => dto.DependencyName == dependencyName
         ).IntersectBy(
             workOrders.Select(w => w.Id),
             e => e.WorkOrderId
         );
-    }
-
-    private static Queue<DateTime?> GetDateTimes(IEnumerable<CustomWorkOrderDependencyDto> dtoList, bool start = true)
-    {
-        Queue<DateTime?> dateTimes = new Queue<DateTime?>();
-        foreach(CustomWorkOrderDependencyDto dto in dtoList)
+        
+        if (start)
         {
-            if (start)
-            {
-                dateTimes.Append(dto.DependencyStart);
-                continue;
-            }
-            dateTimes.Append(dto.DependencyStop);
+            return tempDtoList.ToDictionary(dto => dto.WorkOrderId, dto => dto.DependencyStart);
         }
-
-        return dateTimes;
+        return tempDtoList.ToDictionary(dto => dto.WorkOrderId, dto => dto.DependencyStop);
     }
 
     private static IEnumerable<WorkOrder> SetStartStopDateTimes(
         IEnumerable<WorkOrder> workOrdersToOptimize,
-        Queue<DateTime?> earliestStartDateTimes,
-        Queue<DateTime?> latestStartDateTimes,
-        Queue<DateTime?> deadlineDateTimes,
+        Dictionary<int, DateTime?> earliestStartDateTimes,
+        Dictionary<int, DateTime?> latestStartDateTimes,
+        Dictionary<int, DateTime?> deadlineDateTimes,
         bool checkOtherWorkOrders = false
     )
     {
@@ -131,32 +120,28 @@ public class OptimizationService : IOptimizationService
 
             if (w.Name is null || w.StartDateTime is null || w.StopDateTime is null)
             {
-                workOrders.Append(new WorkOrder{
+                workOrders.Add(new WorkOrder{
                     Id = w.Id,
                     Name = dtoName,
                     StartDateTime = null,
                     StopDateTime = null
                 });
-
-                earliestStartDateTimes.Dequeue();
-                latestStartDateTimes.Dequeue();
-                deadlineDateTimes.Dequeue();
                 continue;
             }
 
             TimeSpan diffDateTime = (TimeSpan)(w.StopDateTime - w.StartDateTime);
-            DateTime? earliestStart = earliestStartDateTimes.Dequeue();
+            DateTime? earliestStart = earliestStartDateTimes[w.Id];
             
             if (checkOtherWorkOrders)
             {
                 throw new NotImplementedException();
             }
 
-            DateTime? latestStart = latestStartDateTimes.Dequeue();
-            DateTime? deadline = deadlineDateTimes.Dequeue();
+            DateTime? latestStart = latestStartDateTimes[w.Id];
+            DateTime? deadline = deadlineDateTimes[w.Id];
             if (earliestStart > latestStart || earliestStart > deadline)
             {
-                workOrders.Append(new WorkOrder{
+                workOrders.Add(new WorkOrder{
                     Id = w.Id,
                     Name = dtoName,
                     StartDateTime = null,
@@ -166,7 +151,7 @@ public class OptimizationService : IOptimizationService
                 continue;
             }          
 
-            workOrders.Append(new WorkOrder{
+            workOrders.Add(new WorkOrder{
                 Id = w.Id,
                 Name = dtoName,
                 StartDateTime = earliestStart,
