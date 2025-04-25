@@ -112,14 +112,14 @@ public class OptimizationService : IOptimizationService
     private static IEnumerable<WorkOrder> SortWorkOrdersByDependency(
         IEnumerable<CustomWorkOrderDependencyDto> dtoList,
         string dependencyName,
-        Func<CustomWorkOrderDependencyDto, int?> filter,
+        Func<CustomWorkOrderDependencyDto, int?> sortSelector,
         IEnumerable<WorkOrder> workOrdersToSort
     )
     {
         return dtoList
             .Where(dto => dto.DependencyName == dependencyName)
             .DistinctBy(dto => dto.WorkOrderId)
-            .OrderByDescending(filter)
+            .OrderByDescending(sortSelector)
             .Select(CustomWorkOrderDependencyMapper.ToWorkOrder)
             .IntersectBy(workOrdersToSort.Select(p => p.Id), c => c.Id);
     }
@@ -131,12 +131,12 @@ public class OptimizationService : IOptimizationService
         bool start = true
     )
     {
-        IEnumerable<CustomWorkOrderDependencyDto> tempDtoList = dtoList
+        IEnumerable<CustomWorkOrderDependencyDto> filteredDtoList = dtoList
             .Where(dto => dto.DependencyName == dependencyName)
             .IntersectBy(workOrders.Select(w => w.Id), e => e.WorkOrderId)
             .DistinctBy(dto => dto.WorkOrderId);
 
-            return tempDtoList
+            return filteredDtoList
                 .ToDictionary(dto => dto.WorkOrderId, dto => start? dto.DependencyStart : dto.DependencyStop);
     }
 
@@ -180,41 +180,41 @@ public class OptimizationService : IOptimizationService
         IEnumerable<WorkOrder> workOrdersOtherAreDependentOn = workOrdersToOptimize
             .Where(w => targetIds.Contains(w.Id));
 
-        foreach(WorkOrder w in workOrdersToOptimize)
+        foreach(WorkOrder workOrder in workOrdersToOptimize)
         {
-            string dtoName = w.Name ?? "";
+            string workOrderName = workOrder.Name ?? "";
 
-            if (w.Name is null || w.StartDateTime is null || w.StopDateTime is null)
+            if (workOrder.Name is null || workOrder.StartDateTime is null || workOrder.StopDateTime is null)
             {
                 workOrders.Add(new WorkOrder{
-                    Id = w.Id,
-                    Name = dtoName,
+                    Id = workOrder.Id,
+                    Name = workOrderName,
                     StartDateTime = null,
                     StopDateTime = null
                 });
                 continue;
             }
 
-            TimeSpan diffDateTime = (TimeSpan)(w.StopDateTime - w.StartDateTime);
-            DateTime? earliestStart = earliestStartDateTimes[w.Id];
-            DateTime? latestStart = latestStartDateTimes[w.Id];
-            DateTime? deadline = deadlineDateTimes[w.Id];
+            TimeSpan diffDateTime = (TimeSpan)(workOrder.StopDateTime - workOrder.StartDateTime);
+            DateTime? earliestStart = earliestStartDateTimes[workOrder.Id];
+            DateTime? latestStart = latestStartDateTimes[workOrder.Id];
+            DateTime? deadline = deadlineDateTimes[workOrder.Id];
 
             // If work order dependent on work order not yet optimized, place in list
             //if (targetIds.Contains())
 
             // If this work order has any other work order dependencies, get the start and stop times of these
-            if (dependentIds.Contains(w.Id))
+            if (dependentIds.Contains(workOrder.Id))
             {
-                DateTime? earliestPossibleStart = GetEarliestPossibleStartDate(w.Id, dtoList);
+                DateTime? earliestPossibleStart = GetEarliestPossibleStartDate(workOrder.Id, dtoList);
                 earliestStart = earliestPossibleStart > earliestStart ? earliestPossibleStart : earliestStart;
             }
 
             if (!IsScheduleFeasible(earliestStart, latestStart, deadline))
             {
                 workOrders.Add(new WorkOrder{
-                    Id = w.Id,
-                    Name = dtoName,
+                    Id = workOrder.Id,
+                    Name = workOrderName,
                     StartDateTime = null,
                     StopDateTime = null
                 });
@@ -223,8 +223,8 @@ public class OptimizationService : IOptimizationService
             }          
 
             workOrders.Add(new WorkOrder{
-                Id = w.Id,
-                Name = dtoName,
+                Id = workOrder.Id,
+                Name = workOrderName,
                 StartDateTime = earliestStart,
                 StopDateTime = earliestStart?.Add(diffDateTime)
             });
@@ -254,7 +254,6 @@ public class OptimizationService : IOptimizationService
         return !(start > latest || start > deadline);
     }
 
-
     private WorkOrder[] DateTimeRandomizer(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
 
@@ -272,11 +271,11 @@ public class OptimizationService : IOptimizationService
             dateTimeStart = dateTimeStart?.AddHours(rndNum);
             dateTimeStop = dateTimeStop?.AddHours(rndNum);
 
-            string dtoName = dto.WorkOrderName ?? "" ;
+            string WorkOrderName = dto.WorkOrderName ?? "" ;
 
             workOrders.Add(new WorkOrder{
                 Id = dto.WorkOrderId,
-                Name = dtoName,
+                Name = WorkOrderName,
                 StartDateTime = dateTimeStart,
                 StopDateTime = dateTimeStop
             });
@@ -284,7 +283,6 @@ public class OptimizationService : IOptimizationService
         }
 
         return workOrders.ToArray();
-
     }
 
 }
