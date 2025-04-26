@@ -6,6 +6,7 @@ public class CustomWorkOrderDependencyDto
     public int WorkOrderId { get; init; }
     public int DependencyId { get; init; }
 
+    public string? WorkOrderName { get; init; }
     public DateTime? WorkOrderStart { get; init; }
     public DateTime? WorkOrderStop { get; init; }
     public string? TextAttributeValue { get; init; }
@@ -14,6 +15,6 @@ public class CustomWorkOrderDependencyDto
     public byte? BooleanAttributeValue { get; init; }
     public DateTime? DependencyStart { get; init; }
     public DateTime? DependencyStop { get; init; }
-    public string? Name { get; init; }
+    public string? DependencyName { get; init; }
 
 }

@@ -3,7 +3,6 @@ using Optiplan.DatabaseResources;
 using Optiplan.WebApi.Repositories;
 using Optiplan.WebApi.Services;
 using Optiplan.WebApi.DataTransferObjects;
-using System.Diagnostics;
 
 namespace Optiplan.WebApi.Controllers;
 
@@ -36,7 +35,7 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(500)]
     public Task<ActionResult> OptimizeByParts([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(dtoList, _optimizationService.OptimizeByPartsAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeByParts);
     }
 
     // POST: api/optimization/costs
@@ -46,7 +45,7 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(500)]
     public Task<ActionResult> OptimizeByCosts([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(dtoList, _optimizationService.OptimizeByCostsAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeByCosts);
     }
 
     // POST: api/optimization/safety
@@ -56,7 +55,7 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(500)]
     public Task<ActionResult> OptimizeBySafety([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(dtoList, _optimizationService.OptimizeBySafetyAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeBySafety);
     }
 
 
@@ -76,6 +75,7 @@ public class OptimizationController : ControllerBase
             wotd.DependencyInstanceId,
             wotd.WorkOrderId,
             wotd.DependencyId,
+            WorkOrderName = wo.Name,
             WorkOrderStart = wo.StartDateTime,
             WorkOrderStop = wo.StopDateTime,
             wotd.TextAttributeValue,
@@ -96,6 +96,7 @@ public class OptimizationController : ControllerBase
             r.DependencyInstanceId,
             r.WorkOrderId,
             r.DependencyId,
+            r.WorkOrderName,
             r.WorkOrderStart,
             r.WorkOrderStop,
             r.TextAttributeValue,
@@ -104,13 +105,14 @@ public class OptimizationController : ControllerBase
             r.BooleanAttributeValue,
             r.DependencyStart,
             r.DependencyStop,
-            d.Name
+            DependencyName = d.Name
         });
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = resultSecondJoin.Select(r => new CustomWorkOrderDependencyDto {
             DependencyInstanceId = r.DependencyInstanceId,
             WorkOrderId = r.WorkOrderId,
             DependencyId = r.DependencyId,
+            WorkOrderName = r.WorkOrderName,
             WorkOrderStart = r.WorkOrderStart,
             WorkOrderStop = r.WorkOrderStop,
             TextAttributeValue = r.TextAttributeValue,
@@ -119,7 +121,7 @@ public class OptimizationController : ControllerBase
             BooleanAttributeValue = r.BooleanAttributeValue,
             DependencyStart = r.DependencyStart,
             DependencyStop = r.DependencyStop,
-            Name = r.Name
+            DependencyName = r.DependencyName
         });
 
         return Ok(new {
@@ -131,7 +133,7 @@ public class OptimizationController : ControllerBase
 
     private async Task<ActionResult> OptimizeAsync(
         IEnumerable<WorkOrderToDependencyDto> dtoList,
-        Func<IEnumerable<CustomWorkOrderDependencyDto>, Task<WorkOrder[]>> optimizationMethod
+        Func<IEnumerable<CustomWorkOrderDependencyDto>, WorkOrder[]> optimizationMethod
     )
     {
         IEnumerable<WorkOrderToDependency> wList = dtoList.Select(WorkOrderToDependencyMapper.ToEntity);
@@ -146,7 +148,7 @@ public class OptimizationController : ControllerBase
         IEnumerable<CustomWorkOrderDependencyDto> resultDtoList = resultValue.Data;
         int expectedCount = resultValue.ExpectedCount;
 
-        IEnumerable<WorkOrder> workOrdersToReturn = await optimizationMethod(resultDtoList);
+        IEnumerable<WorkOrder> workOrdersToReturn = optimizationMethod(resultDtoList);
         if (!workOrdersToReturn.Any())
         {
             return StatusCode(500, "Error optimizing work orders");

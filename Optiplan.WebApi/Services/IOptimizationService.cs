@@ -5,7 +5,7 @@ namespace Optiplan.WebApi.Services;
 
 public interface IOptimizationService
 {
-    Task<WorkOrder[]> OptimizeByPartsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList);
-    Task<WorkOrder[]> OptimizeByCostsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList);
-    Task<WorkOrder[]> OptimizeBySafetyAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList);
+    WorkOrder[] OptimizeByParts(IEnumerable<CustomWorkOrderDependencyDto> dtoList);
+    WorkOrder[] OptimizeByCosts(IEnumerable<CustomWorkOrderDependencyDto> dtoList);
+    WorkOrder[] OptimizeBySafety(IEnumerable<CustomWorkOrderDependencyDto> dtoList);
 }

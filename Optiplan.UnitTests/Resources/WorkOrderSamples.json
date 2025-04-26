@@ -2,19 +2,169 @@
     {
       "id": 1,
       "name": "Valve Integrity Inspection",
-      "startDateTime": "2024-04-29T10:00:00",
-      "stopDateTime": "2024-05-03T13:00:00"
+      "startDateTime": "2025-04-22T10:00:00",
+      "stopDateTime": "2025-04-26T13:00:00"
     },
     {
       "id": 2,
       "name": "Crane Load Testing",
-      "startDateTime": "2024-05-01T10:00:00",
-      "stopDateTime": "2024-05-03T14:00:00"
+      "startDateTime": "2025-04-23T10:00:00",
+      "stopDateTime": "2025-04-26T14:00:00"
     },
     {
       "id": 3,
       "name": "Hydraulic System Maintenance",
-      "startDateTime": "2024-05-02T11:00:00",
-      "stopDateTime": "2024-05-05T14:00:00"
+      "startDateTime": "2025-04-24T11:00:00",
+      "stopDateTime": "2025-04-27T14:00:00"
+    },
+    {
+      "id": 4,
+      "name": "Fire Suppression Drill",
+      "startDateTime": "2025-04-25T09:00:00",
+      "stopDateTime": "2025-04-28T13:00:00"
+    },
+    {
+      "id": 5,
+      "name": "Drilling Rig Calibration",
+      "startDateTime": "2025-04-23T11:00:00",
+      "stopDateTime": "2025-04-26T15:00:00"
+    },
+    {
+      "id": 6,
+      "name": "Subsea Pipeline Check",
+      "startDateTime": "2025-04-22T11:00:00",
+      "stopDateTime": "2025-04-26T13:00:00"
+    },
+    {
+      "id": 7,
+      "name": "Electrical Panel Audit",
+      "startDateTime": "2025-04-24T11:00:00",
+      "stopDateTime": "2025-04-29T13:00:00"
+    },
+    {
+      "id": 8,
+      "name": "Emergency Power System Test",
+      "startDateTime": "2025-04-21T10:00:00",
+      "stopDateTime": "2025-04-24T15:00:00"
+    },
+    {
+      "id": 9,
+      "name": "Helideck Surface Inspection",
+      "startDateTime": "2025-04-26T10:00:00",
+      "stopDateTime": "2025-04-27T14:00:00"
+    },
+    {
+      "id": 10,
+      "name": "Flare Stack Thermography",
+      "startDateTime": "2025-04-22T09:00:00",
+      "stopDateTime": "2025-04-25T16:00:00"
+    },
+    {
+      "id": 11,
+      "name": "Anchor Chain Re-tensioning",
+      "startDateTime": "2025-04-21T09:00:00",
+      "stopDateTime": "2025-04-22T13:00:00"
+    },
+    {
+      "id": 12,
+      "name": "Diving Bell Safety Inspection",
+      "startDateTime": "2025-04-23T09:00:00",
+      "stopDateTime": "2025-04-26T16:00:00"
+    },
+    {
+      "id": 13,
+      "name": "Mooring System Review",
+      "startDateTime": "2025-04-24T10:00:00",
+      "stopDateTime": "2025-04-30T16:00:00"
+    },
+    {
+      "id": 14,
+      "name": "Gas Detection System Calibration",
+      "startDateTime": "2025-04-22T08:00:00",
+      "stopDateTime": "2025-04-26T16:00:00"
+    },
+    {
+      "id": 15,
+      "name": "Pump Room Ventilation Check",
+      "startDateTime": "2025-04-23T09:00:00",
+      "stopDateTime": "2025-04-26T14:00:00"
+    },
+    {
+      "id": 16,
+      "name": "Cathodic Protection Survey",
+      "startDateTime": "2025-04-21T08:00:00",
+      "stopDateTime": "2025-04-25T13:00:00"
+    },
+    {
+      "id": 17,
+      "name": "ROV Deployment Prep",
+      "startDateTime": "2025-04-26T08:00:00",
+      "stopDateTime": "2025-04-27T16:00:00"
+    },
+    {
+      "id": 18,
+      "name": "Mud Circulation System Test",
+      "startDateTime": "2025-04-25T11:00:00",
+      "stopDateTime": "2025-04-27T16:00:00"
+    },
+    {
+      "id": 19,
+      "name": "Wellhead Equipment Maintenance",
+      "startDateTime": "2025-04-22T10:00:00",
+      "stopDateTime": "2025-04-27T16:00:00"
+    },
+    {
+      "id": 20,
+      "name": "Blowout Preventer Test",
+      "startDateTime": "2025-04-24T10:00:00",
+      "stopDateTime": "2025-04-27T13:00:00"
+    },
+    {
+      "id": 21,
+      "name": "Living Quarters HVAC Service",
+      "startDateTime": "2025-04-23T11:00:00",
+      "stopDateTime": "2025-04-26T13:00:00"
+    },
+    {
+      "id": 22,
+      "name": "Ballast Control Panel Upgrade",
+      "startDateTime": "2025-04-22T08:00:00",
+      "stopDateTime": "2025-04-25T13:00:00"
+    },
+    {
+      "id": 23,
+      "name": "Marine Growth Cleaning",
+      "startDateTime": "2025-04-21T09:00:00",
+      "stopDateTime": "2025-04-23T14:00:00"
+    },
+    {
+      "id": 24,
+      "name": "Oil/Water Separator Inspection",
+      "startDateTime": "2025-04-22T10:00:00",
+      "stopDateTime": "2025-04-26T14:00:00"
+    },
+    {
+      "id": 25,
+      "name": "High Pressure Line Flushing",
+      "startDateTime": "2025-04-23T11:00:00",
+      "stopDateTime": "2025-04-26T16:00:00"
+    },
+    {
+      "id": 26,
+      "name": "Diesel Generator Load Test",
+      "startDateTime": "2025-04-21T09:00:00",
+      "stopDateTime": "2025-04-25T15:00:00"
+    },
+    {
+      "id": 27,
+      "name": "Platform Structural Survey",
+      "startDateTime": "2025-04-26T10:00:00",
+      "stopDateTime": "2025-04-27T16:00:00"
+    },
+    {
+      "id": 28,
+      "name": "CCTV Monitoring System Check",
+      "startDateTime": "2025-04-25T10:00:00",
+      "stopDateTime": "2025-04-29T15:00:00"
     }
 ]
