@@ -68,9 +68,18 @@ public class OptimizationController : ControllerBase
             return BadRequest("No data in request");
         }
 
-        IEnumerable<WorkOrder> workOrders = await _workOrderRepository.RetrieveAllAsync();
-        IEnumerable<Dependency> dependencies = await _dependencyRepository.RetrieveAllAsync();
+        IEnumerable<WorkOrder> workOrders;
+        IEnumerable<Dependency> dependencies;
         IEnumerable<CustomWorkOrderDependencyDto> dtoList;
+
+        try{
+            workOrders = await _workOrderRepository.RetrieveAllAsync();
+            dependencies = await _dependencyRepository.RetrieveAllAsync();
+        }
+        catch(Exception e)
+        {
+            return StatusCode(500, $"Database error: {e.Message}");
+        }
 
         try
         {
