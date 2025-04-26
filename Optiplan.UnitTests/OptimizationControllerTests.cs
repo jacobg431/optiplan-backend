@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace Optiplan.UnitTests;
 
-public class OptimizeByPartsTests
+public class OptimizationControllerTests
 {
     private readonly Mock<IDependencyRepository> _dependencyRepositoryMock;
     private readonly Mock<IWorkOrderToDependencyRepository> _workOrderToDependencyRepositoryMock;
@@ -19,7 +19,7 @@ public class OptimizeByPartsTests
     private readonly OptimizationController _optimizationController;
     private readonly ITestOutputHelper _output;
 
-    public OptimizeByPartsTests(ITestOutputHelper output)
+    public OptimizationControllerTests(ITestOutputHelper output)
     {
         _workOrderRepositoryMock = new Mock<IWorkOrderRepository>();
         _workOrderToDependencyRepositoryMock = new Mock<IWorkOrderToDependencyRepository>();
@@ -40,10 +40,10 @@ public class OptimizeByPartsTests
     public async Task ReturnsCreatedResult()
     {
         // Defining file paths for sample data
-        string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
-        string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
-        string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
-        string dependencySamplesPath = baseDirectory + "/DependencySamples.json";
+        string baseDirectory = AppContext.BaseDirectory + "../../../Resources";
+        string workOrderToDependencySamplesPath = baseDirectory + "/GeneralSamples/WorkOrderToDependencySamples.json";
+        string workOrderSamplesPath = baseDirectory + "/GeneralSamples/WorkOrderSamples.json";
+        string dependencySamplesPath = baseDirectory + "/GeneralSamples/DependencySamples.json";
 
         // Mocking WorkOrderRepository
         WorkOrder[]? workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
@@ -109,8 +109,8 @@ public class OptimizeByPartsTests
     public async Task ReturnsInternalServerError()
     {
         string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
-        string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
-        string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = baseDirectory + "/GeneralSamples/WorkOrderToDependencySamples.json";
+        string workOrderSamplesPath = baseDirectory + "/GeneralSamples/WorkOrderSamples.json";
 
         WorkOrder[]? workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
         Assert.IsType<WorkOrder[]>(workOrders);
