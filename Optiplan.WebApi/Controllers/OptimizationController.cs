@@ -36,7 +36,7 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(500)]
     public Task<ActionResult> OptimizeByParts([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(dtoList, _optimizationService.OptimizeByPartsAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeByParts);
     }
 
     // POST: api/optimization/costs
@@ -46,7 +46,7 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(500)]
     public Task<ActionResult> OptimizeByCosts([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(dtoList, _optimizationService.OptimizeByCostsAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeByCosts);
     }
 
     // POST: api/optimization/safety
@@ -56,7 +56,7 @@ public class OptimizationController : ControllerBase
     [ProducesResponseType(500)]
     public Task<ActionResult> OptimizeBySafety([FromBody] IEnumerable<WorkOrderToDependencyDto> dtoList)
     {
-        return OptimizeAsync(dtoList, _optimizationService.OptimizeBySafetyAsync);
+        return OptimizeAsync(dtoList, _optimizationService.OptimizeBySafety);
     }
 
 
@@ -134,7 +134,7 @@ public class OptimizationController : ControllerBase
 
     private async Task<ActionResult> OptimizeAsync(
         IEnumerable<WorkOrderToDependencyDto> dtoList,
-        Func<IEnumerable<CustomWorkOrderDependencyDto>, Task<WorkOrder[]>> optimizationMethod
+        Func<IEnumerable<CustomWorkOrderDependencyDto>, WorkOrder[]> optimizationMethod
     )
     {
         IEnumerable<WorkOrderToDependency> wList = dtoList.Select(WorkOrderToDependencyMapper.ToEntity);
@@ -149,7 +149,7 @@ public class OptimizationController : ControllerBase
         IEnumerable<CustomWorkOrderDependencyDto> resultDtoList = resultValue.Data;
         int expectedCount = resultValue.ExpectedCount;
 
-        IEnumerable<WorkOrder> workOrdersToReturn = await optimizationMethod(resultDtoList);
+        IEnumerable<WorkOrder> workOrdersToReturn = optimizationMethod(resultDtoList);
         if (!workOrdersToReturn.Any())
         {
             return StatusCode(500, "Error optimizing work orders");

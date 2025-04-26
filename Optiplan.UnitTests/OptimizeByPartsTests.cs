@@ -36,7 +36,7 @@ public class OptimizeByPartsTests
         _output = output;
     }
 
-    [Fact (Skip = "Som reason")]
+    [Fact]
     public async Task ReturnsCreatedResult()
     {
         // Defining file paths for sample data
@@ -56,6 +56,12 @@ public class OptimizeByPartsTests
         Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
         _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
 
+        // Mocking WorkOrderToDependencyRepository
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+        _dependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(dependencies);
+
         // Filter out "Other Work Orders" dependencies with invalid references and Creating DTO list
         IEnumerable<int> existingWorkOrderIds = workOrders.Select(w => w.Id).Distinct();
         IEnumerable<WorkOrderToDependencyDto> dtoList = workOrdersToDependencies
@@ -71,7 +77,7 @@ public class OptimizeByPartsTests
 
         foreach (var dep in skippedDeps)
         {
-            _output.WriteLine($"[Warning] Skipping invalid dependencyInstanceId={dep.DependencyInstanceId} referencing missing WorkOrderId={dep.IntegerAttributeValue}");
+            _output.WriteLine($"Skipping invalid dependencyInstanceId={dep.DependencyInstanceId} referencing missing WorkOrderId={dep.IntegerAttributeValue}");
         }
 
         Assert.NotEmpty(dtoList);

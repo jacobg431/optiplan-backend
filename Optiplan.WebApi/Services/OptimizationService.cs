@@ -7,20 +7,20 @@ namespace Optiplan.WebApi.Services;
 
 public class OptimizationService : IOptimizationService
 {    
-    public async Task<WorkOrder[]> OptimizeByPartsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
+    public WorkOrder[] OptimizeByParts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        return await Task.Run(() => OptimizeByParts(dtoList));
+        return OptimizeByPartsInner(dtoList);
     }
-    public async Task<WorkOrder[]> OptimizeByCostsAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
+    public WorkOrder[] OptimizeByCosts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        return await Task.Run(() => DateTimeRandomizer(dtoList)); // Placeholder for now
+        return DateTimeRandomizer(dtoList); // Placeholder for now
     }
-    public async Task<WorkOrder[]> OptimizeBySafetyAsync(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
+    public WorkOrder[] OptimizeBySafety(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
-        return await Task.Run(() => DateTimeRandomizer(dtoList)); // Placeholder for now
+        return DateTimeRandomizer(dtoList); // Placeholder for now
     }
 
-    private WorkOrder[] OptimizeByParts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
+    private WorkOrder[] OptimizeByPartsInner(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
         // Extract work orders that have available parts
         IEnumerable<WorkOrder> partsAvailableWorkOrders = GetWorkOrdersByDependency(
@@ -275,9 +275,6 @@ public class OptimizationService : IOptimizationService
             DateTime? earliestStart = earliestStartDateTimes[workOrder.Id];
             DateTime? latestStart = latestStartDateTimes[workOrder.Id];
             DateTime? deadline = deadlineDateTimes[workOrder.Id];
-
-            // If work order dependent on work order not yet optimized, place in list
-            //if (targetIds.Contains())
 
             // If this work order has any other work order dependencies, get the start and stop times of these
             if (dependentIds.Contains(workOrder.Id))
