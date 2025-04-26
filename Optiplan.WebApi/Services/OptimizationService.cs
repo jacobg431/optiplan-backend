@@ -1,4 +1,3 @@
-using Optiplan.WebApi.Utilities;
 using Optiplan.DatabaseResources;
 using Optiplan.WebApi.DataTransferObjects;
 using System.ComponentModel.DataAnnotations;
@@ -65,14 +64,14 @@ public class OptimizationService : IOptimizationService
         IEnumerable<WorkOrder> workOrdersToOptimize = RemoveDuplicateWorkOrdersAndMerge(partsAvailableWorkOrders, partsNotAvailableWorkOrders);
         IEnumerable<WorkOrder> workOrders = OptimizeWorkOrders(dtoList, workOrdersToOptimize);
 
-        // Debug info
-        IEnumerable<WorkOrder> allWorkOrders = dtoList
-            .DistinctBy(dto => dto.WorkOrderId)
-            .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
-        
-        var workOrderIdSet = allWorkOrders.Select(w => w.Id).ToHashSet();
-        var missing = workOrderIdSet.Except(workOrders.Select(w => w.Id));
-        Console.WriteLine($"Expected: {workOrderIdSet.Count}, Found: {workOrders.Count()}, Missing: {string.Join(", ", missing)}");
+        // Useful for debugging -- KEEP IN
+        //IEnumerable<WorkOrder> allWorkOrders = dtoList
+        //    .DistinctBy(dto => dto.WorkOrderId)
+        //    .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
+        //
+        //var workOrderIdSet = allWorkOrders.Select(w => w.Id).ToHashSet();
+        //var missing = workOrderIdSet.Except(workOrders.Select(w => w.Id));
+        //Console.WriteLine($"Expected: {workOrderIdSet.Count}, Found: {workOrders.Count()}, Missing: {string.Join(", ", missing)}");
 
         //return workOrders.Union(unresolvableWorkOrders).ToArray();
         return workOrders.ToArray();
@@ -230,8 +229,8 @@ public class OptimizationService : IOptimizationService
             deadlineDateTimes.Count != expectedCount
         )
         {
-            throw new ValidationException($"DateTime count did not match expected. Expected {expectedCount}. Got {earliestStartDateTimes.Count}, {latestStartDateTimes.Count}, {deadlineDateTimes.Count}");
-            //throw new ValidationException($"start {earliestStartDateTimes.ElementAt(13)}, start latest {latestStartDateTimes.ElementAt(12)}, deadline {deadlineDateTimes.ElementAt(12)}");
+            throw new ValidationException($"DateTime count did not match expected.");
+            //throw new ValidationException($"DateTime count did not match expected. Expected {expectedCount}. Got {earliestStartDateTimes.Count}, {latestStartDateTimes.Count}, {deadlineDateTimes.Count}");
         }
 
         List<WorkOrder> workOrders = new List<WorkOrder>();

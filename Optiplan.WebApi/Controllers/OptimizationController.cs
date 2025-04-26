@@ -3,7 +3,6 @@ using Optiplan.DatabaseResources;
 using Optiplan.WebApi.Repositories;
 using Optiplan.WebApi.Services;
 using Optiplan.WebApi.DataTransferObjects;
-using System.Diagnostics;
 
 namespace Optiplan.WebApi.Controllers;
 
