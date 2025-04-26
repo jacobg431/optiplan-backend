@@ -1,4 +1,4 @@
-using Optiplan.WebApi.Repositories;
+using Optiplan.WebApi.Utilities;
 using Optiplan.DatabaseResources;
 using Optiplan.WebApi.DataTransferObjects;
 using System.ComponentModel.DataAnnotations;
@@ -25,37 +25,54 @@ public class OptimizationService : IOptimizationService
         // Extract work orders that have available parts
         IEnumerable<WorkOrder> partsAvailableWorkOrders = GetWorkOrdersByDependency(
             dtoList, 
-            "Materials and Parts", 
-            dto => dto.BooleanAttributeValue != 0);
+            6, //"Materials and Parts" 
+            dto => dto.BooleanAttributeValue != 0
+        );
+
+        // Extract work orders that have no parts that need to be available)
+        IEnumerable<WorkOrder> noPartsAvailableInfoWorkOrders = GetWorkOrdersWithoutDependency(
+            dtoList,
+            6 //"Materials and Parts"
+        );
+
+        // Merge work orders and remove any duplicates
+        partsAvailableWorkOrders = RemoveDuplicateWorkOrdersAndMerge(partsAvailableWorkOrders, noPartsAvailableInfoWorkOrders);
 
         // Sort work orders by criticality in descending order
-        IEnumerable<WorkOrder> workOrdersToOptimize = SortWorkOrdersByDependency(
+        partsAvailableWorkOrders = SortWorkOrdersByDependency(
             dtoList,
-            "Criticality",
+            9, //"Criticality"
             dto => dto.IntegerAttributeValue,
             partsAvailableWorkOrders
         );
 
-        //IEnumerable<WorkOrder> unresolvableWorkOrders = new List<WorkOrder>();
-
-        IEnumerable<WorkOrder> workOrders = OptimizeWorkOrders(dtoList, workOrdersToOptimize);
-
         // Extract work orders that don't have available parts
         IEnumerable<WorkOrder> partsNotAvailableWorkOrders = GetWorkOrdersByDependency(
             dtoList, 
-            "Materials and Parts", 
-            dto => dto.BooleanAttributeValue == 0);
+            6, //"Materials and Parts"
+            dto => dto.BooleanAttributeValue == 0
+        );
 
         // Make sure work order without available parts are sorted by criticality
-        workOrdersToOptimize = SortWorkOrdersByDependency(
+        partsNotAvailableWorkOrders = SortWorkOrdersByDependency(
             dtoList,
-            "Criticality",
+            9, //"Criticality"
             dto => dto.IntegerAttributeValue,
             partsNotAvailableWorkOrders
         );
 
-        // Concatinate work orders
-        workOrders = workOrders.Union(OptimizeWorkOrders(dtoList, workOrdersToOptimize));
+        // Merge work orders and remove any duplicates
+        IEnumerable<WorkOrder> workOrdersToOptimize = RemoveDuplicateWorkOrdersAndMerge(partsAvailableWorkOrders, partsNotAvailableWorkOrders);
+        IEnumerable<WorkOrder> workOrders = OptimizeWorkOrders(dtoList, workOrdersToOptimize);
+
+        // Debug info
+        IEnumerable<WorkOrder> allWorkOrders = dtoList
+            .DistinctBy(dto => dto.WorkOrderId)
+            .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
+        
+        var workOrderIdSet = allWorkOrders.Select(w => w.Id).ToHashSet();
+        var missing = workOrderIdSet.Except(workOrders.Select(w => w.Id));
+        Console.WriteLine($"Expected: {workOrderIdSet.Count}, Found: {workOrders.Count()}, Missing: {string.Join(", ", missing)}");
 
         //return workOrders.Union(unresolvableWorkOrders).ToArray();
         return workOrders.ToArray();
@@ -69,19 +86,19 @@ public class OptimizationService : IOptimizationService
         Dictionary<int, DateTime?> earliestStarts = ToDateTimeDictionary(
             dtoList, 
             workOrdersToOptimize, 
-            "Work Order Start (Earliest)"
+            2 //"Work Order Start (Earliest)"
         );
 
         Dictionary<int, DateTime?> latestStarts = ToDateTimeDictionary(
             dtoList, 
             workOrdersToOptimize, 
-            "Work Order Start (Latest)"
+            3 //"Work Order Start (Latest)"
         );
 
         Dictionary<int, DateTime?> deadlines = ToDateTimeDictionary(
             dtoList, 
             workOrdersToOptimize, 
-            "Work Order Deadline",
+            4, //"Work Order Deadline",
             false
         );
 
@@ -98,46 +115,104 @@ public class OptimizationService : IOptimizationService
 
     private static IEnumerable<WorkOrder> GetWorkOrdersByDependency(
         IEnumerable<CustomWorkOrderDependencyDto> dtoList,
-        string dependencyName,
+        int dependencyId,
         Func<CustomWorkOrderDependencyDto, bool> filter
     )
     {
         return dtoList
-            .Where(dto => dto.DependencyName == dependencyName)
+            .Where(dto => dto.DependencyId == dependencyId)
             .Where(filter)
+            .DistinctBy(dto => dto.WorkOrderId)
+            .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
+    }
+
+    private static IEnumerable<WorkOrder> GetWorkOrdersWithoutDependency(
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList,
+        int dependencyId
+    )
+    {
+        // 1) Find all work-orders that have this dependency
+        var referencedWorkOrderIds = dtoList
+            .Where(dto => dto.DependencyId == dependencyId)
+            .Select(dto => dto.WorkOrderId)
+            .ToHashSet();
+
+        // 2) From the full DTO list pick those whose WorkOrderId is NOT in referencedWorkOrderIds
+        return dtoList
+            .Where(dto => !referencedWorkOrderIds.Contains(dto.WorkOrderId))
             .DistinctBy(dto => dto.WorkOrderId)
             .Select(CustomWorkOrderDependencyMapper.ToWorkOrder);
     }
 
     private static IEnumerable<WorkOrder> SortWorkOrdersByDependency(
         IEnumerable<CustomWorkOrderDependencyDto> dtoList,
-        string dependencyName,
+        int dependencyId,
         Func<CustomWorkOrderDependencyDto, int?> sortSelector,
         IEnumerable<WorkOrder> workOrdersToSort
     )
     {
         return dtoList
-            .Where(dto => dto.DependencyName == dependencyName)
+            .Where(dto => dto.DependencyId == dependencyId)
             .DistinctBy(dto => dto.WorkOrderId)
             .OrderByDescending(sortSelector)
             .Select(CustomWorkOrderDependencyMapper.ToWorkOrder)
             .IntersectBy(workOrdersToSort.Select(p => p.Id), c => c.Id);
     }
 
+    private static IEnumerable<WorkOrder> RemoveDuplicateWorkOrdersAndMerge(
+        IEnumerable<WorkOrder> workOrdersOld,
+        IEnumerable<WorkOrder> workOrdersNew
+    )
+    {
+        // Check for duplicates
+        HashSet<int> duplicates = workOrdersOld
+            .IntersectBy(workOrdersNew.Select(n => n.Id), p => p.Id)
+            .Select(d => d.Id)
+            .ToHashSet();
+        
+        if (!duplicates.Any()) {
+            return workOrdersOld.Union(workOrdersNew);
+        }
+
+        // Remove duplicates from new list
+        workOrdersNew = workOrdersNew
+            .ExceptBy(workOrdersOld.Select(n => n.Id), p => p.Id);
+
+        // Check for duplicates
+        duplicates = workOrdersOld
+            .IntersectBy(workOrdersNew.Select(n => n.Id), p => p.Id)
+            .Select(d => d.Id)
+            .ToHashSet();
+        
+        if (duplicates.Count > 0) {
+            throw new ValidationException($"Could not remove duplicates");
+        }
+
+        return workOrdersOld.Union(workOrdersNew);
+    }
+
     private static Dictionary<int, DateTime?> ToDateTimeDictionary(
         IEnumerable<CustomWorkOrderDependencyDto> dtoList,
         IEnumerable<WorkOrder> workOrders,
-        string dependencyName,
+        int dependencyId,
         bool start = true
     )
     {
         IEnumerable<CustomWorkOrderDependencyDto> filteredDtoList = dtoList
-            .Where(dto => dto.DependencyName == dependencyName)
-            .IntersectBy(workOrders.Select(w => w.Id), e => e.WorkOrderId)
-            .DistinctBy(dto => dto.WorkOrderId);
+            .Where(dto => dto.DependencyId == dependencyId)
+            .Where(dto => workOrders.Any(w => w.Id == dto.WorkOrderId))
+            .Where(dto => start ? dto.DependencyStart.HasValue : dto.DependencyStop.HasValue);
+        
+        Dictionary<int, DateTime?> filteredDictionary = filteredDtoList
+            .GroupBy(dto => dto.WorkOrderId)
+            .ToDictionary(
+                g => g.Key,
+                g => start 
+                    ? g.First(dto => dto.DependencyStart.HasValue).DependencyStart
+                    : g.First(dto => dto.DependencyStop.HasValue).DependencyStop
+            );
 
-            return filteredDtoList
-                .ToDictionary(dto => dto.WorkOrderId, dto => start? dto.DependencyStart : dto.DependencyStop);
+        return filteredDictionary;
     }
 
     private static IEnumerable<WorkOrder> SetStartStopDateTimes(
@@ -155,7 +230,8 @@ public class OptimizationService : IOptimizationService
             deadlineDateTimes.Count != expectedCount
         )
         {
-            throw new ValidationException("DateTime count did not match expected");
+            throw new ValidationException($"DateTime count did not match expected. Expected {expectedCount}. Got {earliestStartDateTimes.Count}, {latestStartDateTimes.Count}, {deadlineDateTimes.Count}");
+            //throw new ValidationException($"start {earliestStartDateTimes.ElementAt(13)}, start latest {latestStartDateTimes.ElementAt(12)}, deadline {deadlineDateTimes.ElementAt(12)}");
         }
 
         List<WorkOrder> workOrders = new List<WorkOrder>();

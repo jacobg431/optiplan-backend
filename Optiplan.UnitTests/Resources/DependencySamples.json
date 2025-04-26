@@ -1,7 +1,7 @@
 [
     {
         "id": 1,
-        "name": "Other work orders",
+        "name": "Other Work Orders",
         "tooltip": "Specify other work orders this work order depends on, and whether those work orders must have started or finished before this work order can start.",
         "categoryId": 3,
         "multipleInstances": 1,
@@ -13,7 +13,7 @@
     },
     {
         "id": 2,
-        "name": "Work order Start (Earliest)",
+        "name": "Work Order Start (Earliest)",
         "tooltip": "The earliest date and time the work order can begin.",
         "categoryId": 3,
         "multipleInstances": 0,
@@ -25,7 +25,7 @@
     },
     {
         "id": 3,
-        "name": "Work order Start (Latest)",
+        "name": "Work Order Start (Latest)",
         "tooltip": "The latest date and time the work order can begin.",
         "categoryId": 3,
         "multipleInstances": 0,
@@ -37,7 +37,7 @@
     },
     {
         "id": 4,
-        "name": "Work order Deadline",
+        "name": "Work Order Deadline",
         "tooltip": "The latest date and time the work order must be concluded.",
         "categoryId": 3,
         "multipleInstances": 0,
@@ -131,4 +131,4 @@
         "booleanAttributeLabel": null,
         "category": null
     }
-]
+  ]
