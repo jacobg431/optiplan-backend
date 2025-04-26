@@ -23,41 +23,89 @@ public class OptimizationServiceTests
     }
 
     [Fact]
-    public async Task ReturnsEmptyArrayWhenNoWotd()
+    public void ThrowsArgumentExceptionWhenEmptyDto()
     {
-        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples";
-        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples";
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
 
-        WorkOrder[]? workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
-        Assert.IsType<WorkOrder[]>(workOrders);
-        
-        Dependency[]? dependencies = await FileUtilities.JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
-        Assert.IsType<Dependency[]>(dependencies);
-
-        WorkOrderToDependency[] workOrderToDependencies = new List<WorkOrderToDependency>().ToArray();
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = new List<CustomWorkOrderDependencyDto>();
+        Assert.Throws<ArgumentException>(() => _optimizationService.OptimizeByParts(dtoList));
     }
 
-    
     [Fact]
-    public void ThrowsArgumentNullExceptionWhenNullArgument(){}
+    public void ThrowsArgumentNullExceptionWhenNullArgument()
+    {
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = new List<CustomWorkOrderDependencyDto>();
+        Assert.Throws<ArgumentNullException>(() => _optimizationService.OptimizeByParts(null));
+    }
 
     [Fact]
-    public void OptimizedWhenAllPartsAvailable(){}
+    public async Task OptimizedWhenAllPartsAvailable()
+    {
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _optimizationServiceSamplesDirectory + "/WotdAllPartsAvailableSamples.json";
+        
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
+            .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
+            .ToDtoList(dependencies, workOrders, workOrdersToDependencies
+        );
+
+        WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
+        int[] expectedWorkOrderIds = [1, 5, 3, 2, 4];
+
+        Assert.True(IsSortedByCriticality(dtoList, workOrdersReturned, expectedWorkOrderIds));
+    }
     
-    [Fact]
+    [Fact (Skip = "Reasons")]
     public void OptimizedWhenAllNoPartsAvailable(){}
     
-    [Fact]
+    [Fact (Skip = "Reasons")]
     public void OptimizedWhenMixedPartsAvailable(){}
     
-    [Fact]
+    [Fact (Skip = "Reasons")]
     public void ThrowsValidationExceptionWhenMissingDateTimeAttribute(){}
     
-    [Fact]
+    [Fact (Skip = "Reasons")]
     public void UnScheduledWhenInfeasibleTimeWindow(){}
     
-    [Fact]
+    [Fact (Skip = "Reasons")]
     public void StartEqualsStopWhenZeroDurationWorkOrder(){}
+
+
+    private bool IsSortedByCriticality(IEnumerable<CustomWorkOrderDependencyDto> dtoList, WorkOrder[] workOrders, int[] expectedWorkOrderIds)
+    {        
+        if (workOrders.Length != expectedWorkOrderIds.Length)
+        {
+            return false;
+        }
+        
+        for(int i = 0; i < workOrders.Length; i++)
+        {
+            int workOrderId = workOrders[i].Id;
+            if (workOrderId != expectedWorkOrderIds[i])
+            {
+                _output.WriteLine($"Expected: {expectedWorkOrderIds[i]}. Got: {workOrderId}");
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     
 }

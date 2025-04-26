@@ -8,14 +8,17 @@ public class OptimizationService : IOptimizationService
 {    
     public WorkOrder[] OptimizeByParts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
+        ValidateArgument(dtoList);
         return OptimizeByPartsInner(dtoList);
     }
     public WorkOrder[] OptimizeByCosts(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
+        ValidateArgument(dtoList);
         return DateTimeRandomizer(dtoList); // Placeholder for now
     }
     public WorkOrder[] OptimizeBySafety(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
     {
+        ValidateArgument(dtoList);
         return DateTimeRandomizer(dtoList); // Placeholder for now
     }
 
@@ -324,6 +327,14 @@ public class OptimizationService : IOptimizationService
     private static bool IsScheduleFeasible(DateTime? start, DateTime? latest, DateTime? deadline)
     {
         return !(start > latest || start > deadline);
+    }
+
+    private static void ValidateArgument(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
+    {
+        if (!dtoList.Any())
+        {
+            throw new ArgumentException("No DTO objects provided for optimization service");
+        }
     }
 
     private WorkOrder[] DateTimeRandomizer(IEnumerable<CustomWorkOrderDependencyDto> dtoList)
