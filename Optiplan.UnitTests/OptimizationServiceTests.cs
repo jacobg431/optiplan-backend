@@ -5,6 +5,7 @@ using Optiplan.WebApi.Services;
 using Optiplan.WebApi.Utilities;
 using Optiplan.WebApi.DataTransferObjects;
 using Xunit.Abstractions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Optiplan.UnitTests;
 
@@ -71,14 +72,89 @@ public class OptimizationServiceTests
         Assert.True(IsSortedByCriticality(dtoList, workOrdersReturned, expectedWorkOrderIds));
     }
     
-    [Fact (Skip = "Reasons")]
-    public void OptimizedWhenAllNoPartsAvailable(){}
+    [Fact]
+    public async Task OptimizedWhenAllNoPartsAvailable()
+    {
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _optimizationServiceSamplesDirectory + "/WotdAllNoPartsAvailableSamples.json";
+        
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
+            .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
+            .ToDtoList(dependencies, workOrders, workOrdersToDependencies
+        );
+
+        WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
+        int[] expectedWorkOrderIds = [1, 5, 3, 2, 4];
+
+        Assert.True(IsSortedByCriticality(dtoList, workOrdersReturned, expectedWorkOrderIds));
+    }
     
-    [Fact (Skip = "Reasons")]
-    public void OptimizedWhenMixedPartsAvailable(){}
+    [Fact]
+    public async Task OptimizedWhenMixedPartsAvailable()
+    {
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _optimizationServiceSamplesDirectory + "/WotdMixedPartsAvailableSamples.json";
+        
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
+            .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
+            .ToDtoList(dependencies, workOrders, workOrdersToDependencies
+        );
+
+        WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
+        int[] expectedWorkOrderIds = [1, 2, 5, 3, 4];
+
+        Assert.True(IsSortedByCriticality(dtoList, workOrdersReturned, expectedWorkOrderIds));
+    }
     
-    [Fact (Skip = "Reasons")]
-    public void ThrowsValidationExceptionWhenMissingDateTimeAttribute(){}
+    [Fact]
+    public async Task ThrowsValidationExceptionWhenMissingDateTimeAttribute()
+    {
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _optimizationServiceSamplesDirectory + "/WotdMissingOneDateTimeAttributeSamples.json";
+        
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
+            .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
+            .ToDtoList(dependencies, workOrders, workOrdersToDependencies
+        );
+
+        Assert.Throws<ValidationException>(() => _optimizationService.OptimizeByParts(dtoList));
+    }
     
     [Fact (Skip = "Reasons")]
     public void UnScheduledWhenInfeasibleTimeWindow(){}
