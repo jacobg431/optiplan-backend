@@ -1,4 +1,3 @@
-using Moq;
 using Optiplan.DatabaseResources;
 using Optiplan.WebApi.Services;
 using Optiplan.WebApi.Utilities;
@@ -39,7 +38,7 @@ public class OptimizationServiceTests
         string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = new List<CustomWorkOrderDependencyDto>();
-        Assert.Throws<ArgumentNullException>(() => _optimizationService.OptimizeByParts(null));
+        Assert.Throws<ArgumentNullException>(() => _optimizationService.OptimizeByParts(default!));
     }
 
     [Fact]
@@ -59,7 +58,7 @@ public class OptimizationServiceTests
 
         WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
-        Assert.IsType<WorkOrder[]>(workOrders);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
             .ToDtoList(dependencies, workOrders, workOrdersToDependencies
@@ -88,7 +87,7 @@ public class OptimizationServiceTests
 
         WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
-        Assert.IsType<WorkOrder[]>(workOrders);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
             .ToDtoList(dependencies, workOrders, workOrdersToDependencies
@@ -117,7 +116,7 @@ public class OptimizationServiceTests
 
         WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
-        Assert.IsType<WorkOrder[]>(workOrders);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
             .ToDtoList(dependencies, workOrders, workOrdersToDependencies
@@ -146,7 +145,7 @@ public class OptimizationServiceTests
 
         WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
-        Assert.IsType<WorkOrder[]>(workOrders);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
             .ToDtoList(dependencies, workOrders, workOrdersToDependencies
@@ -172,7 +171,7 @@ public class OptimizationServiceTests
 
         WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
-        Assert.IsType<WorkOrder[]>(workOrders);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
             .ToDtoList(dependencies, workOrders, workOrdersToDependencies
@@ -208,7 +207,7 @@ public class OptimizationServiceTests
 
         WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
-        Assert.IsType<WorkOrder[]>(workOrders);
+        Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
 
         IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
             .ToDtoList(dependencies, workOrders, workOrdersToDependencies
