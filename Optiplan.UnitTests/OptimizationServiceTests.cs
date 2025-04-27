@@ -1,6 +1,5 @@
 using Moq;
 using Optiplan.DatabaseResources;
-using Optiplan.WebApi.Repositories;
 using Optiplan.WebApi.Services;
 using Optiplan.WebApi.Utilities;
 using Optiplan.WebApi.DataTransferObjects;
@@ -69,7 +68,7 @@ public class OptimizationServiceTests
         WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
         int[] expectedWorkOrderIds = [1, 5, 3, 2, 4];
 
-        Assert.True(IsSortedByCriticality(dtoList, workOrdersReturned, expectedWorkOrderIds));
+        Assert.True(IsSortedByCriticality(workOrdersReturned, expectedWorkOrderIds));
     }
     
     [Fact]
@@ -98,7 +97,7 @@ public class OptimizationServiceTests
         WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
         int[] expectedWorkOrderIds = [1, 5, 3, 2, 4];
 
-        Assert.True(IsSortedByCriticality(dtoList, workOrdersReturned, expectedWorkOrderIds));
+        Assert.True(IsSortedByCriticality(workOrdersReturned, expectedWorkOrderIds));
     }
     
     [Fact]
@@ -127,7 +126,7 @@ public class OptimizationServiceTests
         WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
         int[] expectedWorkOrderIds = [1, 2, 5, 3, 4];
 
-        Assert.True(IsSortedByCriticality(dtoList, workOrdersReturned, expectedWorkOrderIds));
+        Assert.True(IsSortedByCriticality(workOrdersReturned, expectedWorkOrderIds));
     }
     
     [Fact]
@@ -156,14 +155,86 @@ public class OptimizationServiceTests
         Assert.Throws<ValidationException>(() => _optimizationService.OptimizeByParts(dtoList));
     }
     
-    [Fact (Skip = "Reasons")]
-    public void UnScheduledWhenInfeasibleTimeWindow(){}
+    [Fact]
+    public async Task UnScheduledWhenInfeasibleTimeWindow()
+    {
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _optimizationServiceSamplesDirectory + "/WotdInfeasibleTimeWindowsSamples.json";
+        
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
+            .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
+            .ToDtoList(dependencies, workOrders, workOrdersToDependencies
+        );
+
+        WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
+        Assert.NotEmpty(workOrdersReturned);
+
+        int targetWorkOrderId = 1;
+
+        DateTime? dateTime = workOrdersReturned
+            .Where(w => w.Id.Equals(targetWorkOrderId))
+            .Select(w => w.StartDateTime)
+            .FirstOrDefault(DateTime.Parse("2000-01-01 00:00:00"));
+        
+        Assert.Null(dateTime);
+    }
     
-    [Fact (Skip = "Reasons")]
-    public void StartEqualsStopWhenZeroDurationWorkOrder(){}
+    [Fact]
+    public async Task StartEqualsStopWhenZeroDurationWorkOrder()
+    {
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _optimizationServiceSamplesDirectory + "/WoZeroDurationWorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _generalSamplesDirectory + "/WorkOrderToDependencySamples.json";
+        
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
 
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
 
-    private bool IsSortedByCriticality(IEnumerable<CustomWorkOrderDependencyDto> dtoList, WorkOrder[] workOrders, int[] expectedWorkOrderIds)
+        WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
+            .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
+        Assert.IsType<WorkOrder[]>(workOrders);
+
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList = CustomWorkOrderDependencyMapper
+            .ToDtoList(dependencies, workOrders, workOrdersToDependencies
+        );
+
+        WorkOrder[] workOrdersReturned = _optimizationService.OptimizeByParts(dtoList);
+        Assert.NotEmpty(workOrdersReturned);
+
+        int targetWorkOrderId = 18;
+
+        DateTime? startDateTime = workOrdersReturned
+            .Where(w => w.Id.Equals(targetWorkOrderId))
+            .Select(w => w.StartDateTime)
+            .FirstOrDefault();
+        Assert.NotNull(startDateTime);
+
+        DateTime? stopDateTime = workOrdersReturned
+            .Where(w => w.Id.Equals(targetWorkOrderId))
+            .Select(w => w.StopDateTime)
+            .FirstOrDefault();
+        Assert.NotNull(stopDateTime);
+
+        Assert.Equal(startDateTime, stopDateTime);
+    }
+
+    private bool IsSortedByCriticality(WorkOrder[] workOrders, int[] expectedWorkOrderIds)
     {        
         if (workOrders.Length != expectedWorkOrderIds.Length)
         {
@@ -182,6 +253,4 @@ public class OptimizationServiceTests
 
         return true;
     }
-
-    
 }
