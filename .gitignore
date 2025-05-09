@@ -8,6 +8,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+tempCodeRunnerFile.sh
 
 # Environment
 .env

@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace Optiplan.UnitTests;
 
-public class OptimizeByPartsTests
+public class OptimizationControllerTests
 {
     private readonly Mock<IDependencyRepository> _dependencyRepositoryMock;
     private readonly Mock<IWorkOrderToDependencyRepository> _workOrderToDependencyRepositoryMock;
@@ -18,8 +18,9 @@ public class OptimizeByPartsTests
     private readonly IOptimizationService _optimizationService;
     private readonly OptimizationController _optimizationController;
     private readonly ITestOutputHelper _output;
+    private static readonly string _generalSamplesDirectory = AppContext.BaseDirectory + "../../../Resources/GeneralSamples";
 
-    public OptimizeByPartsTests(ITestOutputHelper output)
+    public OptimizationControllerTests(ITestOutputHelper output)
     {
         _workOrderRepositoryMock = new Mock<IWorkOrderRepository>();
         _workOrderToDependencyRepositoryMock = new Mock<IWorkOrderToDependencyRepository>();
@@ -40,13 +41,19 @@ public class OptimizeByPartsTests
     public async Task ReturnsCreatedResult()
     {
         // Defining file paths for sample data
-        string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
-        string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
-        string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
-        string dependencySamplesPath = baseDirectory + "/DependencySamples.json";
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _generalSamplesDirectory + "/WorkOrderToDependencySamples.json";
+
+        // Mocking DependencyRepository
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+        _dependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(dependencies);
 
         // Mocking WorkOrderRepository
-        WorkOrder[]? workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
         Assert.IsType<WorkOrder[]>(workOrders);
         _workOrderRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(workOrders);
 
@@ -55,12 +62,6 @@ public class OptimizeByPartsTests
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
         Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
         _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
-
-        // Mocking WorkOrderToDependencyRepository
-        Dependency[]? dependencies = await FileUtilities
-            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
-        Assert.IsType<Dependency[]>(dependencies);
-        _dependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(dependencies);
 
         // Filter out "Other Work Orders" dependencies with invalid references and Creating DTO list
         IEnumerable<int> existingWorkOrderIds = workOrders.Select(w => w.Id).Distinct();
@@ -108,18 +109,24 @@ public class OptimizeByPartsTests
     [Fact]
     public async Task ReturnsInternalServerError()
     {
-        string baseDirectory = System.AppContext.BaseDirectory + "../../../Resources";
-        string workOrderToDependencySamplesPath = baseDirectory + "/WorkOrderToDependencySamples.json";
-        string workOrderSamplesPath = baseDirectory + "/WorkOrderSamples.json";
+        string workOrderToDependencySamplesPath = _generalSamplesDirectory + "/WorkOrderToDependencySamples.json";
+        string workOrderSamplesPath = _generalSamplesDirectory + "/WorkOrderSamples.json";
+        string dependencySamplesPath = _generalSamplesDirectory + "/DependencySamples.json";
 
-        WorkOrder[]? workOrders = await FileUtilities.JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
+        Dependency[]? dependencies = await FileUtilities
+            .JsonFileReaderAsync<Dependency[]>(dependencySamplesPath);
+        Assert.IsType<Dependency[]>(dependencies);
+        _dependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ThrowsAsync(new Exception("Database error"));
+
+        WorkOrder[]? workOrders = await FileUtilities
+            .JsonFileReaderAsync<WorkOrder[]>(workOrderSamplesPath);
         Assert.IsType<WorkOrder[]>(workOrders);
         _workOrderRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(workOrders);
 
         WorkOrderToDependency[]? workOrdersToDependencies = await FileUtilities
             .JsonFileReaderAsync<WorkOrderToDependency[]>(workOrderToDependencySamplesPath);
         Assert.IsType<WorkOrderToDependency[]>(workOrdersToDependencies);
-        _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ThrowsAsync(new System.Exception("Database error"));
+        _workOrderToDependencyRepositoryMock.Setup(r => r.RetrieveAllAsync()).ReturnsAsync(workOrdersToDependencies);
 
         IEnumerable<WorkOrderToDependencyDto> dtoList = workOrdersToDependencies.Select(WorkOrderToDependencyMapper.ToDto);
         var result = await _optimizationController.OptimizeByParts(dtoList);

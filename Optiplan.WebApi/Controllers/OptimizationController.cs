@@ -61,74 +61,42 @@ public class OptimizationController : ControllerBase
 
     // Private methods
 
-    private async Task<ActionResult> DenormalizeData(IEnumerable<WorkOrderToDependency> wList)
+    private async Task<ActionResult> DenormalizeData(IEnumerable<WorkOrderToDependency> workOrderToDependencies)
     {
-        if (wList == null || !wList.Any())
+        if (workOrderToDependencies == null)
         {
             return BadRequest("No data in request");
         }
 
-        IEnumerable<WorkOrder> workOrders = await _workOrderRepository.RetrieveAllAsync();
-        IEnumerable<Dependency> dependencies = await _dependencyRepository.RetrieveAllAsync();
+        IEnumerable<WorkOrder> workOrders;
+        IEnumerable<Dependency> dependencies;
+        IEnumerable<CustomWorkOrderDependencyDto> dtoList;
 
-        var resultFirstJoin = wList.Join(workOrders, wotd => wotd.WorkOrderId, wo => wo.Id, (wotd, wo) => new {
-            wotd.DependencyInstanceId,
-            wotd.WorkOrderId,
-            wotd.DependencyId,
-            WorkOrderName = wo.Name,
-            WorkOrderStart = wo.StartDateTime,
-            WorkOrderStop = wo.StopDateTime,
-            wotd.TextAttributeValue,
-            wotd.IntegerAttributeValue,
-            wotd.NumberAttributeValue,
-            wotd.BooleanAttributeValue,
-            DependencyStart = wotd.StartDateTime,
-            DependencyStop = wotd.StopDateTime
-        });
-
-        int expectedNumberOfWorkOrders = resultFirstJoin.Select(r => r.WorkOrderId).Distinct().Count();
-        if (expectedNumberOfWorkOrders == 0)
+        try{
+            workOrders = await _workOrderRepository.RetrieveAllAsync();
+            dependencies = await _dependencyRepository.RetrieveAllAsync();
+        }
+        catch(Exception e)
         {
-            return BadRequest("Request not containing references to valid work orders");
+            return StatusCode(500, $"Database error: {e.Message}");
         }
 
-        var resultSecondJoin = resultFirstJoin.Join(dependencies, r => r.DependencyId, d => d.Id, (r, d) => new {
-            r.DependencyInstanceId,
-            r.WorkOrderId,
-            r.DependencyId,
-            r.WorkOrderName,
-            r.WorkOrderStart,
-            r.WorkOrderStop,
-            r.TextAttributeValue,
-            r.IntegerAttributeValue,
-            r.NumberAttributeValue,
-            r.BooleanAttributeValue,
-            r.DependencyStart,
-            r.DependencyStop,
-            DependencyName = d.Name
-        });
+        try
+        {
+            dtoList = CustomWorkOrderDependencyMapper
+                .ToDtoList(dependencies, workOrders, workOrderToDependencies);
+        }
+        catch(Exception e)
+        {
+            return BadRequest(e.Message);
+        }
 
-        IEnumerable<CustomWorkOrderDependencyDto> dtoList = resultSecondJoin.Select(r => new CustomWorkOrderDependencyDto {
-            DependencyInstanceId = r.DependencyInstanceId,
-            WorkOrderId = r.WorkOrderId,
-            DependencyId = r.DependencyId,
-            WorkOrderName = r.WorkOrderName,
-            WorkOrderStart = r.WorkOrderStart,
-            WorkOrderStop = r.WorkOrderStop,
-            TextAttributeValue = r.TextAttributeValue,
-            IntegerAttributeValue = r.IntegerAttributeValue,
-            NumberAttributeValue = r.NumberAttributeValue,
-            BooleanAttributeValue = r.BooleanAttributeValue,
-            DependencyStart = r.DependencyStart,
-            DependencyStop = r.DependencyStop,
-            DependencyName = r.DependencyName
-        });
+        int expectedNumberOfWorkOrders = dtoList.Select(r => r.WorkOrderId).Distinct().Count();
 
         return Ok(new {
             Data = dtoList, 
             ExpectedCount = expectedNumberOfWorkOrders
         });
-
     }
 
     private async Task<ActionResult> OptimizeAsync(
